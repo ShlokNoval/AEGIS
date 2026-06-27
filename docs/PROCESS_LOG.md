@@ -30,7 +30,8 @@
 | Phase 3 | Ownership Mapping | ✅ Complete | `docs/TEAM_OWNERSHIP.md` |
 | Phase 4 | Development Roadmap | ✅ Complete | `docs/ROADMAP.md` |
 | Phase 5 | Development Preparation | ✅ Complete | `docs/PROJECT_DECISIONS.md` |
-| Coding | Milestone 1 - Foundation | ⏳ Ready to Start | — |
+| Coding | Milestone 1 - Foundation | ✅ Complete | Repository, Docker, Schemas, Skeletons |
+| Coding | Milestone 2 - RAG Pipeline & Backend | ⏳ Ready to Start | — |
 
 ---
 
@@ -84,7 +85,10 @@
 ---
 
 ### Next Steps
-1. User reviews all documentation
-2. User provides answers to Q17 (deadlines) and Q22 (machine specs) — optional
-3. User confirms readiness to begin Milestone 1
-4. Begin coding: create repository structure, Docker Compose, shared schemas
+1. User provides prompt for the next session.
+2. Begin coding **Milestone 2: RAG Pipeline & Basic Backend**:
+   - Vertex AI embedding client
+   - ChromaDB integration
+   - Document ingestion pipeline
+   - Recon Agent (v1)
+   - FastAPI `/api/query` endpoint
