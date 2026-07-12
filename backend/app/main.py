@@ -6,6 +6,10 @@ import os
 # Load environment variables
 load_dotenv()
 
+import uuid
+from app.shared.schemas import AgentRequest
+from app.agents.recon import ReconAgent
+
 app = FastAPI(
     title="AEGIS API",
     description="AI-driven Early Warning Intelligence System",
@@ -30,10 +34,19 @@ async def health_check():
 async def submit_query(query: str):
     """
     Submit a query to the orchestrator.
-    This will eventually return an AgentResponse.
+    Currently instantiates and runs the ReconAgent directly for testing.
     """
-    # TODO: Connect to orchestrator
-    return {"message": "Query received", "query": query}
+    session_id = str(uuid.uuid4())
+    request = AgentRequest(query=query, session_id=session_id)
+    
+    agent = ReconAgent()
+    response = await agent.run(request)
+    
+    return {
+        "message": "Query processed", 
+        "query_id": session_id,
+        "agent_response": response.model_dump()
+    }
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

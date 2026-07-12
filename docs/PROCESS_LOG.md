@@ -31,7 +31,8 @@
 | Phase 4 | Development Roadmap | ✅ Complete | `docs/ROADMAP.md` |
 | Phase 5 | Development Preparation | ✅ Complete | `docs/PROJECT_DECISIONS.md` |
 | Coding | Milestone 1 - Foundation | ✅ Complete | Repository, Docker, Schemas, Skeletons |
-| Coding | Milestone 2 - RAG Pipeline & Backend | ⏳ Ready to Start | — |
+| Coding | Milestone 2 - RAG Pipeline & Backend | ✅ Complete | Embeddings, Chunking, ChromaDB, Ingestion, Recon v1, API |
+| Coding | Milestone 3 - Advanced Orchestration & Agents | ⏳ Ready to Start | — |
 
 ---
 
@@ -86,9 +87,27 @@
 
 ### Next Steps
 1. User provides prompt for the next session.
-2. Begin coding **Milestone 2: RAG Pipeline & Basic Backend**:
-   - Vertex AI embedding client
-   - ChromaDB integration
-   - Document ingestion pipeline
-   - Recon Agent (v1)
-   - FastAPI `/api/query` endpoint
+2. Begin coding **Milestone 3: Advanced Orchestration & Agents**:
+   - LangGraph Orchestrator core
+   - Devil's Advocate Agent
+   - Financial Agent
+   - Geopolitical Agent
+   - Synthesis Agent
+   - Confidence Engine
+   - Websocket integration
+
+---
+
+## Session 2 — 2026-07-12
+
+### Milestone 2: RAG Pipeline & Basic Backend
+
+Successfully implemented the RAG pipeline and the first agent (ReconAgent).
+
+### Files Created/Modified
+- `backend/app/retrieval/embeddings.py` (Vertex AI client for `text-embedding-005`)
+- `backend/app/retrieval/chunking.py` (Langchain RecursiveCharacterTextSplitter)
+- `backend/app/retrieval/vector_store.py` (ChromaDB persistent client)
+- `backend/app/retrieval/ingestion.py` (Pipeline combining chunking, embeddings, and vector store)
+- `backend/app/agents/recon.py` (ReconAgent v1 utilizing DuckDuckGo)
+- `backend/app/main.py` (Updated `/api/query` to trigger ReconAgent)
