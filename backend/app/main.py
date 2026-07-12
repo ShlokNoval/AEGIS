@@ -8,7 +8,9 @@ load_dotenv()
 
 import uuid
 from app.shared.schemas import AgentRequest
-from app.agents.recon import ReconAgent
+from app.orchestrator.workflow import create_workflow
+
+orchestrator_app = create_workflow()
 
 app = FastAPI(
     title="AEGIS API",
@@ -34,18 +36,32 @@ async def health_check():
 async def submit_query(query: str):
     """
     Submit a query to the orchestrator.
-    Currently instantiates and runs the ReconAgent directly for testing.
+    This routes the request through the LangGraph multi-agent flow.
     """
     session_id = str(uuid.uuid4())
     request = AgentRequest(query=query, session_id=session_id)
     
-    agent = ReconAgent()
-    response = await agent.run(request)
+    initial_state = {
+        "request": request,
+        "all_claims": [],
+        "agent_responses": {},
+        "challenges": [],
+        "round_count": 0,
+        "final_briefing": {},
+        "confidence_metrics": {}
+    }
+    
+    try:
+        final_state = await orchestrator_app.ainvoke(initial_state)
+    except Exception as e:
+        return {"message": "Error processing query", "error": str(e)}
     
     return {
         "message": "Query processed", 
         "query_id": session_id,
-        "agent_response": response.model_dump()
+        "briefing": final_state.get("final_briefing", {}),
+        "confidence": final_state.get("confidence_metrics", {}),
+        "rounds_taken": final_state.get("round_count", 0)
     }
 
 @app.websocket("/ws")
