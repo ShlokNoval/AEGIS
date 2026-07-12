@@ -126,8 +126,16 @@ Successfully integrated Neo4j and Hybrid GraphRAG logic.
 - **Fix:** Created `backend/Dockerfile` with `pip install` commands. Updated `requirements.txt` to resolve pip backtracking conflicts. Switched spaCy installation in Dockerfile to direct pip wheel installation to prevent GitHub download timeouts.
 - **Status:** Local environment and Docker graph database successfully verified.
 
-## Next Steps (Milestone 5 - Initiated)
-- Begin Frontend Application (Vite + React) development.
-- Install Tailwind CSS, shadcn/ui, and lucide-react.
-- Setup React Router DOM for Dashboard, Query Execution, and Results pages.
-- Integrate Supabase Auth in the frontend.
+### Milestone 5: Frontend Application (Complete)
+- **Framework:** Initialized Vite + React + TypeScript environment.
+- **UI & Styling:** Configured Tailwind CSS, PostCSS, and shadcn/ui. Built a premium dark-mode, glassmorphism aesthetic.
+- **Core Pages:**
+  - `Dashboard.tsx`: Centralized search interface and agent selection toggles.
+  - `QueryExecution.tsx`: Real-time telemetry dashboard using custom WebSocket hook (`useAgentStream`).
+  - `Results.tsx`: Synthesis briefing with confidence badges and Devil's Advocate visualizations.
+- **Services:** Implemented `api.ts` for FastAPI interaction and `supabase.ts` for database connectivity.
+
+## Next Steps (Milestone 6 - Initiated)
+- System Integration: Ensure the FastAPI orchestrator sends the correct JSON payload format expected by the frontend WebSocket hook.
+- Supabase Auth: Protect frontend routes (`/logs`, `/settings`) with Supabase session management.
+- Backend DB integration: Start writing queries/logs to the Supabase tables we created in the setup phase.
