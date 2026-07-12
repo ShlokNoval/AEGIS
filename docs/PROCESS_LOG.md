@@ -135,7 +135,12 @@ Successfully integrated Neo4j and Hybrid GraphRAG logic.
   - `Results.tsx`: Synthesis briefing with confidence badges and Devil's Advocate visualizations.
 - **Services:** Implemented `api.ts` for FastAPI interaction and `supabase.ts` for database connectivity.
 
-## Next Steps (Milestone 6 - Initiated)
-- System Integration: Ensure the FastAPI orchestrator sends the correct JSON payload format expected by the frontend WebSocket hook.
-- Supabase Auth: Protect frontend routes (`/logs`, `/settings`) with Supabase session management.
-- Backend DB integration: Start writing queries/logs to the Supabase tables we created in the setup phase.
+### Milestone 6: System Integration & Auth (Complete)
+- **Backend Refactor:** Modified FastAPI to use `BackgroundTasks` for non-blocking execution of the LangGraph orchestrator.
+- **WebSocket Broadcasting:** Created a `ConnectionManager` to stream LangGraph's node-by-node execution state to the frontend in real-time.
+- **Database Hookup:** Integrated the official `supabase` Python client in the backend to log queries, final briefings, and confidence scores directly to PostgreSQL.
+- **Frontend Auth:** Built a premium `Login.tsx` page and protected the React Router with `@supabase/supabase-js` session management. The dashboard is now fully locked down to authenticated agents.
+
+## Next Steps (Project Finalization)
+- Full end-to-end testing of the pipeline (Trigger query -> Stream WebSockets -> GraphRAG Analysis -> Devil's Advocate -> Synthesis -> Save to DB).
+- Polish the UI based on real data payloads.
