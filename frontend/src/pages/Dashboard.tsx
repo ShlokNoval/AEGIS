@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { api } from "@/services/api";
 
 export function Dashboard() {
   const [query, setQuery] = useState("");
@@ -23,12 +24,19 @@ export function Dashboard() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    // In real app, we'd call the API here to get a query_id, then navigate
-    const mockQueryId = Math.random().toString(36).substring(7);
-    navigate(`/query/${mockQueryId}`, { state: { query, agents: activeAgents } });
+    
+    try {
+      const response = await api.submitQuery(query, activeAgents);
+      navigate(`/query/${response.query_id}`, { state: { query, agents: activeAgents } });
+    } catch (err) {
+      console.error("Failed to submit query", err);
+      // Fallback for UI testing if backend is down
+      const mockQueryId = Math.random().toString(36).substring(7);
+      navigate(`/query/${mockQueryId}`, { state: { query, agents: activeAgents } });
+    }
   };
 
   return (

@@ -5,40 +5,22 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { BrainCircuit, CheckCircle2, ShieldAlert } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAgentStream } from "@/hooks/useAgentStream";
 
 export function QueryExecution() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0);
   
-  // Mock WebSockets event stream
-  const [events, setEvents] = useState([
-    { id: 1, type: "system", text: "Initializing LangGraph Orchestrator...", time: "00:00" },
-    { id: 2, type: "agent", text: "Recon Agent started deep-web crawling", time: "00:01" },
-  ]);
+  // Connect to actual WebSocket stream
+  const { events, progress, isComplete } = useAgentStream(id);
 
-  // Simulate progress
+  // Navigate to results when processing hits 100% and is complete
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress(old => {
-        if (old >= 100) {
-          clearInterval(timer);
-          setTimeout(() => navigate(`/results/${id}`), 1500);
-          return 100;
-        }
-        return old + 2;
-      });
-    }, 200);
-    return () => clearInterval(timer);
-  }, [id, navigate]);
-
-  // Simulate incoming events
-  useEffect(() => {
-    if (progress === 20) setEvents(prev => [...prev, { id: 3, type: "agent", text: "Financial Agent analyzing market sentiment", time: "00:04" }]);
-    if (progress === 40) setEvents(prev => [...prev, { id: 4, type: "graph", text: "GraphRAG extracted 15 entities from Neo4j", time: "00:08" }]);
-    if (progress === 60) setEvents(prev => [...prev, { id: 5, type: "challenge", text: "Devil's Advocate raised challenge on Financial claim #12", time: "00:12" }]);
-    if (progress === 80) setEvents(prev => [...prev, { id: 6, type: "system", text: "Synthesis Agent compiling final briefing...", time: "00:16" }]);
-  }, [progress]);
+    if (isComplete || progress >= 100) {
+      const timer = setTimeout(() => navigate(`/results/${id}`), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [progress, isComplete, id, navigate]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
