@@ -33,7 +33,8 @@
 | Coding | Milestone 1 - Foundation | ✅ Complete | Repository, Docker, Schemas, Skeletons |
 | Coding | Milestone 2 - RAG Pipeline & Backend | ✅ Complete | Embeddings, Chunking, ChromaDB, Ingestion, Recon v1, API |
 | Coding | Milestone 3 - Advanced Orchestration & Agents | ✅ Complete | LangGraph, Financial/Geo Agents, DA, Synthesis, Confidence |
-| Coding | Milestone 4 - GraphRAG & Neo4j Integration | ⏳ Ready to Start | — |
+| Coding | Milestone 4 - GraphRAG & Neo4j Integration | ✅ Complete | Neo4j Client, spaCy NER, Hybrid Context Fusion |
+| Coding | Milestone 5 - Frontend Application | ⏳ Ready to Start | — |
 
 ---
 
@@ -110,3 +111,23 @@ Successfully implemented the LangGraph orchestrator, the remaining agents, and t
 - `backend/app/agents/devil_advocate.py` (Devil's Advocate for claim challenges)
 - `backend/app/agents/synthesis.py` (Synthesis Agent for final briefing)
 - `backend/app/main.py` (Refactored `/api/query` to use LangGraph orchestrator)
+
+### Milestone 4: GraphRAG & Neo4j Integration
+
+Successfully integrated Neo4j and Hybrid GraphRAG logic.
+- `backend/app/shared/neo4j_client.py` (Neo4j connection logic)
+- `backend/app/retrieval/graph.py` (spaCy NER entity extraction and Cypher queries)
+- `backend/app/retrieval/hybrid.py` (Fusing Vector and Graph context)
+- `backend/app/retrieval/ingestion.py` (Updated to ingest `Chunk` and `MENTIONS` into Neo4j)
+- Agents (`recon.py`, `financial.py`, `geopolitical.py`) updated to use Hybrid RAG.
+
+#### Debugging & Setup Phase
+- **Issue:** `docker-compose up` failed because of missing `backend/Dockerfile`.
+- **Fix:** Created `backend/Dockerfile` with `pip install` commands. Updated `requirements.txt` to resolve pip backtracking conflicts. Switched spaCy installation in Dockerfile to direct pip wheel installation to prevent GitHub download timeouts.
+- **Status:** Local environment and Docker graph database successfully verified.
+
+## Next Steps (Milestone 5 - Initiated)
+- Begin Frontend Application (Vite + React) development.
+- Install Tailwind CSS, shadcn/ui, and lucide-react.
+- Setup React Router DOM for Dashboard, Query Execution, and Results pages.
+- Integrate Supabase Auth in the frontend.
