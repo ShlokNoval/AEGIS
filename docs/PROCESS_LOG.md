@@ -32,7 +32,8 @@
 | Phase 5 | Development Preparation | ✅ Complete | `docs/PROJECT_DECISIONS.md` |
 | Coding | Milestone 1 - Foundation | ✅ Complete | Repository, Docker, Schemas, Skeletons |
 | Coding | Milestone 2 - RAG Pipeline & Backend | ✅ Complete | Embeddings, Chunking, ChromaDB, Ingestion, Recon v1, API |
-| Coding | Milestone 3 - Advanced Orchestration & Agents | ⏳ Ready to Start | — |
+| Coding | Milestone 3 - Advanced Orchestration & Agents | ✅ Complete | LangGraph, Financial/Geo Agents, DA, Synthesis, Confidence |
+| Coding | Milestone 4 - GraphRAG & Neo4j Integration | ⏳ Ready to Start | — |
 
 ---
 
@@ -87,27 +88,25 @@
 
 ### Next Steps
 1. User provides prompt for the next session.
-2. Begin coding **Milestone 3: Advanced Orchestration & Agents**:
-   - LangGraph Orchestrator core
-   - Devil's Advocate Agent
-   - Financial Agent
-   - Geopolitical Agent
-   - Synthesis Agent
-   - Confidence Engine
-   - Websocket integration
+2. Begin coding **Milestone 4: GraphRAG & Neo4j Integration**:
+   - Neo4j database setup and schema creation
+   - Entity extraction pipeline (spaCy)
+   - Graph relationships and Cypher queries
+   - Hybrid retrieval (ChromaDB + Neo4j)
 
 ---
 
-## Session 2 — 2026-07-12
+## Session 3 — 2026-07-12
 
-### Milestone 2: RAG Pipeline & Basic Backend
+### Milestone 3: Advanced Orchestration & Agents
 
-Successfully implemented the RAG pipeline and the first agent (ReconAgent).
+Successfully implemented the LangGraph orchestrator, the remaining agents, and the confidence engine.
 
 ### Files Created/Modified
-- `backend/app/retrieval/embeddings.py` (Vertex AI client for `text-embedding-005`)
-- `backend/app/retrieval/chunking.py` (Langchain RecursiveCharacterTextSplitter)
-- `backend/app/retrieval/vector_store.py` (ChromaDB persistent client)
-- `backend/app/retrieval/ingestion.py` (Pipeline combining chunking, embeddings, and vector store)
-- `backend/app/agents/recon.py` (ReconAgent v1 utilizing DuckDuckGo)
-- `backend/app/main.py` (Updated `/api/query` to trigger ReconAgent)
+- `backend/app/orchestrator/workflow.py` (LangGraph state machine and routing)
+- `backend/app/confidence/engine.py` (Confidence scoring logic)
+- `backend/app/agents/financial.py` (Financial Agent using yfinance)
+- `backend/app/agents/geopolitical.py` (Geopolitical Agent using feedparser)
+- `backend/app/agents/devil_advocate.py` (Devil's Advocate for claim challenges)
+- `backend/app/agents/synthesis.py` (Synthesis Agent for final briefing)
+- `backend/app/main.py` (Refactored `/api/query` to use LangGraph orchestrator)
