@@ -25,3 +25,11 @@ class BaseAgent(ABC):
         Handle challenges from the Devil's Advocate agent.
         """
         pass
+        
+    async def retrieve_context(self, query: str, collection_name: str = "general_docs") -> str:
+        """
+        Retrieves context using the Hybrid GraphRAG pipeline (ChromaDB + Neo4j).
+        """
+        from ..retrieval.hybrid import get_fused_context
+        return get_fused_context(query, collection_name)
+

@@ -28,7 +28,11 @@ class GeopoliticalAgent(BaseAgent):
     async def run(self, request: AgentRequest) -> AgentResponse:
         start_time = time.time()
         
+        # 1. Gather live RSS news
         news_items = self._fetch_rss_news()
+        
+        # 2. Gather internal context via Hybrid GraphRAG
+        rag_context = await self.retrieve_context(request.query, collection_name="geo_docs")
         
         claims = []
         for i, item in enumerate(news_items):

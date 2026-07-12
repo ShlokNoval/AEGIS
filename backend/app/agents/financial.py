@@ -27,7 +27,11 @@ class FinancialAgent(BaseAgent):
     async def run(self, request: AgentRequest) -> AgentResponse:
         start_time = time.time()
         
+        # 1. Gather live market data via yfinance
         market_data = self._fetch_market_data(request.query)
+        
+        # 2. Gather internal context via Hybrid GraphRAG
+        rag_context = await self.retrieve_context(request.query, collection_name="financial_docs")
         
         source = SourceCitation(
             id="src_fin_1",

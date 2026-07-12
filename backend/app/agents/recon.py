@@ -34,8 +34,8 @@ class ReconAgent(BaseAgent):
         # 1. Gather OSINT via DDG
         search_results = self._search_ddg(request.query)
         
-        # 2. Gather internal context via RAG (stubbed for now since no docs are ingested yet)
-        # RAG implementation would query vector_store with embedded request.query
+        # 2. Gather internal context via RAG (GraphRAG + Vector Search)
+        rag_context = await self.retrieve_context(request.query, collection_name="recon_docs")
         
         # 3. Compile Claims (Without Vertex AI auth, we simulate the LLM's synthesis step
         # by extracting direct claims from the search results to ensure it runs cleanly)
