@@ -37,6 +37,8 @@ logs/
 
 # GCP
 service-account-key.json
+gcp-key.json
+backend/gcp-key.json
 
 # Extracted text files (intermediate)
 *.txt

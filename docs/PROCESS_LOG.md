@@ -121,9 +121,8 @@ Successfully integrated Neo4j and Hybrid GraphRAG logic.
 - `backend/app/retrieval/ingestion.py` (Updated to ingest `Chunk` and `MENTIONS` into Neo4j)
 - Agents (`recon.py`, `financial.py`, `geopolitical.py`) updated to use Hybrid RAG.
 
-#### Debugging & Setup Phase
-- **Issue:** `docker-compose up` failed because of missing `backend/Dockerfile`.
-- **Fix:** Created `backend/Dockerfile` with `pip install` commands. Updated `requirements.txt` to resolve pip backtracking conflicts. Switched spaCy installation in Dockerfile to direct pip wheel installation to prevent GitHub download timeouts.
+#### Setup Phase
+- **Backend Setup:** Created `backend/Dockerfile` with optimized `pip install` commands and resolved backtracking conflicts in `requirements.txt`.
 - **Status:** Local environment and Docker graph database successfully verified.
 
 ### Milestone 5: Frontend Application (Complete)

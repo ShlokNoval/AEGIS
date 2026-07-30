@@ -1,68 +1,24 @@
-# AEGIS — Continuation Prompt for Next Session
+# Resume Prompt for Next Session
 
-> **Copy-paste the text below (between the === lines) as your first message to AntiGravity in a new conversation.**
-> **Updated:** 2026-06-27
+**Copy and paste the following prompt into your AI assistant at the start of your next session:**
 
-===
+---
 
-## Context: AEGIS Project — Resume from Milestone 1 Complete
+Hello! We are working on the **AEGIS** (Early Warning Intelligence System) project, a final year B.Tech project. I am Shlok.
 
-I am working on the **AEGIS (AI-driven Early Warning Intelligence System)** project — a multi-agent AI intelligence platform for my B.Tech final-year project.
+**Current State of the Project:**
+We have successfully completed all core Milestones (1 through 6), which includes:
+- FastAPI Backend with LangGraph Multi-Agent Orchestration (Recon, Financial, Geopolitical, Devil's Advocate, Synthesis).
+- React + Vite Frontend with a premium TailwindCSS/shadcn UI, fully integrated with real-time WebSockets to stream agent telemetry.
+- Supabase Integration for user authentication (Login page) and persistent database logging of queries and briefings.
+- Dockerized Neo4j database setup.
+- The `.env` variables and GCP Service Account (`gcp-key.json`) are completely set up and ready to go locally.
 
-**Repository:** https://github.com/ShlokNoval/AEGIS.git  
-**Workspace:** `c:\Users\shlok\Downloads\Final Year Project\AEGIS`
-**Branch:** `Shlok` (We are working on the Shlok branch for AI Core implementation)
+**What we need to do today (Pending Tasks):**
+We are on the final stretch! We need to execute the Implementation Plan for Shlok's final Data Pipeline and Polish tasks. Specifically:
+1. **Demo Corpus Creation:** Create 3-4 realistic mock intelligence reports (PDFs/Text) in the `data/documents/` folder.
+2. **GraphRAG Ingestion Script:** Create `backend/scripts/ingest_corpus.py` to ingest these documents through our existing pipeline so that they are chunked, embedded into ChromaDB, and their entities are extracted via spaCy and pushed to the Neo4j Knowledge Graph.
+3. **Performance Optimization:** Refactor `backend/app/retrieval/hybrid.py` to run the ChromaDB search and Neo4j search concurrently (using `asyncio.gather`) to reduce retrieval latency.
+4. **Documentation:** Update the root `README.md` with final setup instructions and architecture details.
 
-### What Has Been Done (Milestone 1 Complete)
-
-All architecture review, planning, and documentation is finished. The Milestone 1 Foundation is also complete.
-
-| What is set up | Location |
-|----------------|----------|
-| Directory Structure | `backend/app/shared`, `agents`, `orchestrator`, `retrieval`, `frontend`, etc. |
-| Docker Compose | `docker-compose.yml` (FastAPI + Neo4j) |
-| Shared Schemas | `backend/app/shared/schemas.py` and `constants.py` |
-| FastAPI Skeleton | `backend/app/main.py` |
-| React Skeleton | `frontend/` (Vite + React TS) |
-| CI Pipeline | `.github/workflows/ci.yml` |
-| Base Agents | `backend/app/agents/base.py` & `mock_agent.py` |
-| Process Log | `docs/PROCESS_LOG.md` (Tracks all decisions and current state) |
-| Master Plan | `docs/IMPLEMENTATION_PLAN.md` (Source of truth for specs) |
-
-### Locked-In Technology Stack
-
-- **LLM:** Gemini 1.5 Flash (speed agents) + Gemini 1.5 Pro (reasoning agents) via **Vertex AI** ($1,000 GCP credits)
-- **Vector DB:** ChromaDB (embedded mode, free)
-- **Graph DB:** Neo4j Community Edition (Docker, free)
-- **App DB + Auth:** Supabase (free tier — PostgreSQL + JWT auth + RLS)
-- **Backend:** FastAPI (monolithic, Python)
-- **Frontend:** React + Vite + Shadcn/ui + Tailwind CSS
-- **Orchestration:** LangGraph
-- **WebSocket:** FastAPI native
-- **Search:** DuckDuckGo (free), SEC Edgar (free), yfinance (free), GDELT (free)
-- **NER:** spaCy
-- **Deployment:** Docker Compose
-- **Budget:** $0 external cost; all free-tier + GCP credits
-
-### What Needs to Happen Next
-
-**Start Milestone 2: RAG Pipeline & Basic Backend** — This means:
-
-1. Build the Vertex AI embedding client (`backend/app/retrieval/embeddings.py`) — batch + query embedding via `text-embedding-005`
-2. Build the Document chunking logic (`backend/app/retrieval/chunking.py`) — 500-token chunks with overlap
-3. Build the ChromaDB vector store wrapper (`backend/app/retrieval/vector_store.py`)
-4. Build the Document ingestion pipeline (`backend/app/retrieval/ingestion.py`) — process PDFs/text → chunks → embed → store
-5. Start building the Recon Agent v1 (`backend/app/agents/recon.py`) combining DuckDuckGo search + ChromaDB RAG
-6. Add the Query API endpoint in FastAPI (`POST /api/query`) to trigger agents
-
-### Important Rules
-
-- Read `docs/PROCESS_LOG.md` first to understand current state
-- Read `docs/IMPLEMENTATION_PLAN.md` for all technical specifications
-- Follow all schemas, folder structures, and conventions already documented
-- Do NOT re-plan or re-review architecture — it's all approved
-- Start coding immediately — we are in the implementation phase on the `Shlok` branch
-- Create a `task.md` artifact to track progress for Milestone 2.
-- All dependencies must be free (zero budget constraint)
-
-===
+Please acknowledge this context, review the `docs/PROCESS_LOG.md` and `docs/ROADMAP.md` if you need more details, and let me know when you are ready to begin writing the `ingest_corpus.py` script!
