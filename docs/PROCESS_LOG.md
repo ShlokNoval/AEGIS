@@ -143,3 +143,53 @@ Successfully integrated Neo4j and Hybrid GraphRAG logic.
 ## Next Steps (Project Finalization)
 - Full end-to-end testing of the pipeline (Trigger query -> Stream WebSockets -> GraphRAG Analysis -> Devil's Advocate -> Synthesis -> Save to DB).
 - Polish the UI based on real data payloads.
+
+---
+
+## Session 4 — 2026-08-30
+
+### Role: Aditya (Lead Platform Engineer & Full-Stack Systems Developer)
+
+### Objectives
+Finalize all open Aditya-owned deliverables from Milestone 6 (Integration, Polish & Demo):
+- History API endpoint + Supabase wiring
+- Async performance optimization for hybrid retrieval (owned by Aditya on the API call chain)
+- UI component polish (ConfidenceBadge, AgentCard, LoadingSpinner)
+- History page (new feature)
+- Updated routing
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `frontend/src/components/ConfidenceBadge.tsx` | Colour-coded HIGH/MED/LOW confidence badge (green ≥80, yellow ≥55, red <55) |
+| `frontend/src/components/AgentCard.tsx` | Per-agent status card with idle/running/done/error states, inline progress bar, animated icons |
+| `frontend/src/components/LoadingSpinner.tsx` | AEGIS branded dual-ring counter-rotating spinner with pulsing centre dot |
+| `frontend/src/pages/History.tsx` | Full history page: paginated query list, status badges, row-click nav to results, empty/error states |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/database/supabase_client.py` | Added `get_query_history(limit, offset)` — paginated SELECT from `queries` table |
+| `backend/app/main.py` | Added `GET /api/history` endpoint with `limit`/`offset` query params |
+| `backend/app/retrieval/hybrid.py` | **Async refactor**: `get_fused_context` is now `async`, runs ChromaDB and Neo4j via `asyncio.gather` for concurrent I/O (reduces latency vs sequential) |
+| `backend/app/agents/base.py` | Added `await` to `retrieve_context` call to `get_fused_context` |
+| `backend/test_graphrag.py` | Added `await` to `get_fused_context` call in test |
+| `frontend/src/services/api.ts` | Added `fetchHistory()` function and `HistoryRecord` interface |
+| `frontend/src/pages/Results.tsx` | Replaced raw `confidence%` text in `ClaimCard` with `<ConfidenceBadge>` |
+| `frontend/src/pages/QueryExecution.tsx` | Replaced plain module list with `<AgentCard>` components; added `<LoadingSpinner>` for zero-progress and empty-events states |
+| `frontend/src/App.tsx` | Imported `History` page; added `/history` protected route |
+
+### Git Commits
+- `97a339e` — `feat(api): add GET /api/history endpoint and async hybrid retrieval`
+- `3d86d06` — `feat(frontend): add ConfidenceBadge, AgentCard, LoadingSpinner components and History page`
+
+### Branch Status
+Pushed to `origin/Aditya`. Clean, no merge conflicts.
+
+### Next Steps (for Shlok / next session)
+1. **Demo Corpus:** Create 3-4 realistic intelligence report PDFs/text in `data/documents/`
+2. **Ingest Script:** `backend/scripts/ingest_corpus.py` to push docs through ChromaDB + Neo4j pipeline
+3. **End-to-End Test:** Wire `final_briefing` from the LangGraph state into the WebSocket broadcast so `Results.tsx` shows real data instead of placeholder content
+4. **README.md:** Root-level setup instructions for both team members
