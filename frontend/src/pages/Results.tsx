@@ -1,6 +1,7 @@
 import { Shield, Brain, FileText, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ConfidenceBadge } from "@/components/ConfidenceBadge";
 
 export function Results() {
   return (
@@ -135,12 +136,12 @@ function ClaimCard({ text, agent, confidence, sources, challenged = false }: any
       <CardContent className="p-5">
         <div className="flex justify-between items-start gap-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="secondary" className="text-xs">{agent} Agent</Badge>
               {challenged && <Badge variant="outline" className="text-xs border-red-500/50 text-red-500 bg-red-500/10">Challenged</Badge>}
             </div>
             <p className="font-medium text-foreground">{text}</p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {sources.map((s: string) => (
                 <span key={s} className="text-xs text-muted-foreground bg-secondary/50 px-2 py-1 rounded-md">
                   {s}
@@ -148,9 +149,8 @@ function ClaimCard({ text, agent, confidence, sources, challenged = false }: any
               ))}
             </div>
           </div>
-          <div className="flex flex-col items-end shrink-0">
-            <span className="text-2xl font-bold text-primary">{confidence}%</span>
-            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Confidence</span>
+          <div className="shrink-0 pt-0.5">
+            <ConfidenceBadge score={confidence} />
           </div>
         </div>
       </CardContent>

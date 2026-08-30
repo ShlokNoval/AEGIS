@@ -5,6 +5,7 @@ import { Layout } from "./components/layout/Layout";
 import { Dashboard } from "./pages/Dashboard";
 import { QueryExecution } from "./pages/QueryExecution";
 import { Results } from "./pages/Results";
+import { History } from "./pages/History";
 import { Login } from "./pages/Login";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -46,6 +47,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="query/:id" element={<QueryExecution />} />
           <Route path="results/:id" element={<Results />} />
+          <Route path="history" element={<History />} />
         </Route>
       </Routes>
     </BrowserRouter>

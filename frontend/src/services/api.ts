@@ -16,5 +16,23 @@ export const api = {
     }
     
     return response.json();
-  }
+  },
+
+  async fetchHistory(limit = 20, offset = 0): Promise<HistoryRecord[]> {
+    const response = await fetch(
+      `${API_BASE_URL}/history?limit=${limit}&offset=${offset}`
+    );
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.history as HistoryRecord[];
+  },
 };
+
+export interface HistoryRecord {
+  id: string;
+  query_text: string;
+  status: "processing" | "completed" | "failed";
+  created_at: string;
+}
