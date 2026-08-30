@@ -47,3 +47,24 @@ async def log_briefing(query_id: str, briefing: dict, confidence: dict):
         }).execute()
     except Exception as e:
         logger.error(f"Failed to log briefing: {e}")
+
+async def get_query_history(limit: int = 20, offset: int = 0) -> list:
+    """
+    Fetches paginated query history from Supabase, ordered by newest first.
+    Returns a list of query records, or an empty list if Supabase is unavailable.
+    """
+    if not supabase_client:
+        return []
+    try:
+        result = (
+            supabase_client.table("queries")
+            .select("id, query_text, status, created_at")
+            .order("created_at", desc=True)
+            .range(offset, offset + limit - 1)
+            .execute()
+        )
+        return result.data if result.data else []
+    except Exception as e:
+        logger.error(f"Failed to fetch query history from Supabase: {e}")
+        return []
+

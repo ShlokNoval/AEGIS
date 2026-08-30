@@ -12,7 +12,7 @@ import uuid
 from app.shared.schemas import AgentRequest
 from app.orchestrator.workflow import create_workflow
 from app.shared.websocket_manager import manager
-from app.database.supabase_client import log_query, log_query_complete, log_briefing
+from app.database.supabase_client import log_query, log_query_complete, log_briefing, get_query_history
 
 orchestrator_app = create_workflow()
 
@@ -35,6 +35,17 @@ app.add_middleware(
 async def health_check():
     """Basic health check endpoint"""
     return {"status": "ok", "service": "aegis-backend"}
+
+@app.get("/api/history")
+async def get_history(limit: int = 20, offset: int = 0):
+    """
+    Returns paginated query history from Supabase.
+    Query params:
+      - limit  (int, default 20): number of records to return
+      - offset (int, default  0): number of records to skip
+    """
+    records = await get_query_history(limit=limit, offset=offset)
+    return {"history": records, "limit": limit, "offset": offset}
 
 class QueryPayload(BaseModel):
     agents: list[str] = []

@@ -31,5 +31,5 @@ class BaseAgent(ABC):
         Retrieves context using the Hybrid GraphRAG pipeline (ChromaDB + Neo4j).
         """
         from ..retrieval.hybrid import get_fused_context
-        return get_fused_context(query, collection_name)
+        return await get_fused_context(query, collection_name)
 
