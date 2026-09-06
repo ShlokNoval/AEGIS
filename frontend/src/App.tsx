@@ -15,22 +15,45 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    // 1. Check for active local operative session (for offline / demo / viva presentation)
+    const localSession = localStorage.getItem("aegis_session");
+    if (localSession) {
+      try {
+        setSession(JSON.parse(localSession));
+        setLoading(false);
+        return;
+      } catch (e) {
+        localStorage.removeItem("aegis_session");
+      }
+    }
+
+    // 2. Otherwise check Supabase auth
+    try {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data?.session) {
+          setSession(data.session);
+        }
+        setLoading(false);
+      }).catch(() => {
+        setLoading(false);
+      });
+
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          setSession(session);
+        }
+      });
+
+      return () => subscription.unsubscribe();
+    } catch {
       setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
+    }
   }, []);
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center">Authenticating...</div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-background text-foreground font-mono text-sm">Authenticating Uplink...</div>;
   }
 
   if (!session) {
