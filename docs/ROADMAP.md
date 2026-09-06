@@ -1,7 +1,8 @@
 # AEGIS — Development Roadmap
 
 > **Created:** 2026-06-26
-> **Status:** Active
+> **Last Updated:** 2026-09-06
+> **Status:** COMPLETED — 100% Milestones 1–6 Delivered, Verified, and Submission-Ready
 > **Baseline:** Integrated from both source documents, improved with optimized ordering
 
 ---
@@ -332,3 +333,17 @@ graph LR
 | 13 | Source trust scoring, performance tuning | Briefing UI with confidence annotations |
 | 14-15 | E2E testing, demo corpus, prompt tuning | UI polish, responsive design, bug fixes |
 | 16 | Documentation, demo script, presentation | Documentation, demo script, presentation |
+
+---
+
+## Final Milestone Completion & Verification Matrix
+
+| Milestone | Scope | Lead Owner | Status | Verification Evidence |
+|---|---|---|---|---|
+| **M1: Foundation & Contracts** | Schemas, Docker, CI/CD, Base Agent contracts | Both | **COMPLETE** | GitHub Actions CI green, Pydantic contracts validated |
+| **M2: RAG Pipeline & Basic Backend** | ChromaDB, embeddings, Recon agent, REST API | Shlok / Aditya | **COMPLETE** | Persistent ChromaDB vector collections, live DDG retrieval |
+| **M3: Neo4j & GraphRAG** | Cypher queries, entity-relationship traversal | Shlok | **COMPLETE** | Offline-resilient Neo4j client, GraphRAG context |
+| **M4: Multi-Agent Orchestration** | Recon, Financial, Geopolitical parallel agents | Shlok | **COMPLETE** | Dynamic ticker mapping, yfinance live stats, LangGraph state |
+| **M5: Adversarial Loop & Confidence** | Devil's Advocate, debate rounds, confidence engine | Shlok | **COMPLETE** | Mitigating factor claims, α/β calibrated scoring formula |
+| **M6: Integration, Polish & Demo** | Predictive scenario matrix, War Room UI, tests | Both | **COMPLETE** | 3/3 pytest passing, 4/4 demo scenario suites passing, Vite build 0 errors |
+
