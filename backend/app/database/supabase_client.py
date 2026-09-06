@@ -68,3 +68,22 @@ async def get_query_history(limit: int = 20, offset: int = 0) -> list:
         logger.error(f"Failed to fetch query history from Supabase: {e}")
         return []
 
+async def get_briefing_by_query_id(query_id: str) -> dict:
+    """
+    Fetches the briefing record for a given query_id from Supabase.
+    """
+    if not supabase_client:
+        return None
+    try:
+        result = (
+            supabase_client.table("briefings")
+            .select("*")
+            .eq("query_id", query_id)
+            .limit(1)
+            .execute()
+        )
+        return result.data[0] if result.data else None
+    except Exception as e:
+        logger.error(f"Failed to fetch briefing for {query_id}: {e}")
+        return None
+
