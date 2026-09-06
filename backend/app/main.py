@@ -395,15 +395,15 @@ async def submit_query(
     SESSION_CACHE[session_id] = {
         "query_id": session_id,
         "status": "processing",
-        "query_text": query,
+        "query_text": query_text,
         "briefing": {},
         "confidence": {},
         "claims": [],
         "challenges": []
     }
-    await log_query(session_id, query)
+    await log_query(session_id, query_text)
     
-    background_tasks.add_task(run_orchestrator_background, session_id, query, initial_state)
+    background_tasks.add_task(run_orchestrator_background, session_id, query_text, initial_state)
     
     return {
         "message": "Query started", 
