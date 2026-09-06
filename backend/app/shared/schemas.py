@@ -18,6 +18,8 @@ class Claim(BaseModel):
     sources: List[SourceCitation]
     challenged: bool = False
     challenge_result: Optional[str] = None
+    challenge_note: Optional[str] = None
+    revised: bool = False
     agent_id: str
 
 class AgentRequest(BaseModel):

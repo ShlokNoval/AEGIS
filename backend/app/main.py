@@ -161,6 +161,39 @@ async def get_query_result(query_id: str):
                 "Gallium and Germanium dual-use export permits have expanded defense avionics lead times by 34 weeks.",
                 "Commercial war-risk insurance surcharges in the Taiwan Strait have spiked 8-fold."
             ],
+            "scenarios": [
+                {
+                    "name": "Baseline: Sovereign Decoupling & Secondary Retrofitting",
+                    "probability": 65,
+                    "impact": "HIGH",
+                    "description": "Domestic foundries maximize legacy DUV utilization using secondary market parts; western fab tooling suppliers experience minor revenue dampening offset by US/EU domestic fab subsidies.",
+                    "timeline": "30-90 Days"
+                },
+                {
+                    "name": "Escalation: Total Lithography Maintenance Embargo",
+                    "probability": 25,
+                    "impact": "CRITICAL",
+                    "description": "Strict enforcement halts all third-party software updates and field maintenance, causing Chinese sub-7nm foundry defect rates to spike beyond 60% and triggering retaliatory rare earth permit halts.",
+                    "timeline": "90-180 Days"
+                },
+                {
+                    "name": "Mitigation: Bilateral Legacy Hardware Grandfathering",
+                    "probability": 10,
+                    "impact": "MODERATE",
+                    "description": "Bilateral trade consultations establish strict tiering, exempting 28nm+ trailing-edge nodes and calming global automotive and consumer electronics supply chains.",
+                    "timeline": "180+ Days"
+                }
+            ],
+            "timeline_horizons": {
+                "horizon_30d": "Immediate supplier audits, emergency inventory rebalancing, and engagement with legal counsel on regulatory exposure.",
+                "horizon_90d": "Secondary procurement contracts operationalized; financial hedges adjusted against spot volatility.",
+                "horizon_180d": "Structural realignment achieved; capex diverted toward sovereign-resilient and dual-sourced logistics architectures."
+            },
+            "recommendations": [
+                "Initiate multi-tier supply chain audits to identify unhedged single-point-of-failure component dependencies.",
+                "Establish contingency buffers for critical materials and pre-qualify secondary regional suppliers.",
+                "Implement continuous geopolitical monitoring to trigger automatic inventory surge protocols upon policy escalation."
+            ],
             "claims": [
                 {
                     "id": "clm_1",
@@ -214,6 +247,7 @@ async def get_query_result(query_id: str):
     }
 
 class QueryPayload(BaseModel):
+    query: Optional[str] = None
     agents: list[str] = []
     max_rounds: Optional[int] = 2
     source_tier: Optional[int] = 2
@@ -326,14 +360,23 @@ async def run_orchestrator_background(session_id: str, query_text: str, initial_
         await log_query_complete(session_id, "failed")
 
 @app.post("/api/query")
-async def submit_query(query: str, payload: QueryPayload, background_tasks: BackgroundTasks):
+async def submit_query(
+    payload: QueryPayload, 
+    background_tasks: BackgroundTasks,
+    query: Optional[str] = Query(None)
+):
     """
     Submit a query to the orchestrator.
+    Accepts query from query parameter or JSON body.
     Dispatches LangGraph in the background and returns a session_id.
     """
+    query_text = query or payload.query
+    if not query_text:
+        raise HTTPException(status_code=400, detail="Query text is required.")
+        
     session_id = str(uuid.uuid4())
     request = AgentRequest(
-        query=query, 
+        query=query_text, 
         session_id=session_id,
         max_rounds=payload.max_rounds or 2
     )

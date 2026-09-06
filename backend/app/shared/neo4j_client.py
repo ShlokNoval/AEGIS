@@ -10,12 +10,17 @@ class Neo4jClient:
         self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         self.user = os.getenv("NEO4J_USER", "neo4j")
         self.password = os.getenv("NEO4J_PASSWORD", "your-secure-password")
+        self._connected = False
+        self._attempted = False
         
         try:
-            self.driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
-            logger.info(f"Connected to Neo4j at {self.uri}")
+            self.driver = GraphDatabase.driver(
+                self.uri, 
+                auth=(self.user, self.password),
+                connection_timeout=1.0
+            )
         except Exception as e:
-            logger.error(f"Failed to connect to Neo4j: {e}")
+            logger.debug(f"Failed to create Neo4j driver: {e}")
             self.driver = None
 
     def close(self):
@@ -27,15 +32,22 @@ class Neo4jClient:
         Executes a Cypher query and returns a list of dictionaries (records).
         """
         if not self.driver:
-            logger.warning("Neo4j driver is not initialized. Skipping query.")
+            return []
+            
+        if self._attempted and not self._connected:
             return []
 
         try:
             with self.driver.session() as session:
                 result = session.run(cypher, parameters or {})
-                return [record.data() for record in result]
+                data = [record.data() for record in result]
+                self._connected = True
+                self._attempted = True
+                return data
         except Exception as e:
-            logger.error(f"Neo4j query failed: {e}")
+            self._attempted = True
+            self._connected = False
+            logger.debug(f"Neo4j offline: {e}")
             return []
             
     def execute_write(self, cypher: str, parameters: dict = None):

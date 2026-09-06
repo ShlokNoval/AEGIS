@@ -10,15 +10,18 @@ class VectorStore:
         """
         # Ensure path is absolute or relative to project root
         self.persist_directory = persist_directory
-        self.client = chromadb.PersistentClient(path=self.persist_directory)
+        self.client = chromadb.PersistentClient(
+            path=self.persist_directory,
+            settings=chromadb.config.Settings(anonymized_telemetry=False)
+        )
         self.collections = {}
 
     def get_or_create_collection(self, collection_name: str):
         if collection_name not in self.collections:
-            self.collections[collection_name] = self.client.get_or_create_collection(
-                name=collection_name,
-                metadata={"hnsw:space": "cosine"} # Use cosine similarity
-            )
+            try:
+                self.collections[collection_name] = self.client.get_collection(name=collection_name)
+            except Exception:
+                self.collections[collection_name] = self.client.get_or_create_collection(name=collection_name)
         return self.collections[collection_name]
 
     def add_documents(

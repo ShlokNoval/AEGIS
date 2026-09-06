@@ -10,12 +10,13 @@ async def _vector_search(query: str, collection_name: str) -> List[str]:
     """Run ChromaDB vector search in a thread pool executor (sync client)."""
     loop = asyncio.get_event_loop()
     try:
-        vector_results = await loop.run_in_executor(
-            None,
-            lambda: vector_store.search(
-                collection_name=collection_name, query_texts=[query], n_results=5
-            ),
-        )
+        def _do_search():
+            res = vector_store.search(collection_name=collection_name, query_texts=[query], n_results=5)
+            if (not res or not res.get("documents") or not res["documents"][0]) and collection_name != "general_docs":
+                res = vector_store.search(collection_name="general_docs", query_texts=[query], n_results=5)
+            return res
+
+        vector_results = await loop.run_in_executor(None, _do_search)
         if vector_results and "documents" in vector_results and vector_results["documents"][0]:
             blocks = ["--- SEMANTIC CONTEXT (Vector DB) ---"]
             blocks.extend(f"- {doc}" for doc in vector_results["documents"][0])

@@ -14,7 +14,12 @@ import {
   Info, 
   X, 
   Lock, 
-  Sparkles 
+  Sparkles,
+  TrendingUp,
+  Clock,
+  Compass,
+  ShieldCheck,
+  Activity
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +71,21 @@ ${data.briefing?.executive_summary || "No summary provided."}
 =======================================================
 KEY FINDINGS:
 ${(data.briefing?.key_findings || []).map((f, i) => `${i + 1}. ${f}`).join("\n")}
+
+=======================================================
+PREDICTIVE OUTCOME SCENARIOS:
+${(data.briefing?.scenarios || []).map((s, i) => `[Scenario ${i + 1}] ${s.name} (Probability: ${s.probability}%, Impact: ${s.impact}, Horizon: ${s.timeline})
+  ${s.description}`).join("\n\n")}
+
+=======================================================
+STRATEGIC TIMELINE HORIZONS:
+T+30 Days:  ${data.briefing?.timeline_horizons?.horizon_30d || "Operational audit active"}
+T+90 Days:  ${data.briefing?.timeline_horizons?.horizon_90d || "Secondary realignment"}
+T+180 Days: ${data.briefing?.timeline_horizons?.horizon_180d || "Long-term equilibrium"}
+
+=======================================================
+STRATEGIC RECOMMENDATIONS:
+${(data.briefing?.recommendations || []).map((r, i) => `${i + 1}. ${r}`).join("\n")}
 
 =======================================================
 VERIFIED CLAIMS & EVIDENCE:
@@ -256,6 +276,162 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
                       <li key={i}>{f}</li>
                     ))}
                   </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Predictive Strategic Trajectory & Scenario Matrix */}
+          <Card className="border-border/60 shadow-xl bg-card/60 backdrop-blur-xl overflow-hidden">
+            <CardHeader className="border-b border-border/50 pb-4 bg-secondary/20 flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center text-lg text-foreground">
+                <TrendingUp className="w-5 h-5 mr-3 text-emerald-400" />
+                Strategic Outcome Forecast & Scenario Matrix
+              </CardTitle>
+              <Badge variant="outline" className="font-mono text-[10px] uppercase bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                MULTI-HORIZON PROBABILITY
+              </Badge>
+            </CardHeader>
+
+            <CardContent className="p-6 space-y-6">
+              {/* Scenarios Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {(briefing?.scenarios || [
+                  {
+                    name: "Baseline: Sovereign Decoupling & Supply Chain Realignment",
+                    probability: 65,
+                    impact: "HIGH",
+                    description: "Affected institutions absorb regulatory friction through inventory buffering and secondary logistics realignments.",
+                    timeline: "30-90 Days"
+                  },
+                  {
+                    name: "Escalation: Retaliatory Restrictions & Critical Chokepoint Fracture",
+                    probability: 25,
+                    impact: "CRITICAL",
+                    description: "Countervailing sovereign measures halt key transit corridors, triggering acute spot spikes and downstream fabrication delays.",
+                    timeline: "90-180 Days"
+                  },
+                  {
+                    name: "Mitigation: Bilateral Trade Exemptions & Quota Harmonization",
+                    probability: 10,
+                    impact: "MODERATE",
+                    description: "Bilateral standard recognition and diplomatic carve-outs de-escalate near-term tension and stabilize tariff structures.",
+                    timeline: "180+ Days"
+                  }
+                ]).map((sc, scIdx) => {
+                  const isHighProb = sc.probability >= 50;
+                  const isCrit = sc.impact === "CRITICAL" || sc.impact === "SEVERE";
+
+                  return (
+                    <div 
+                      key={scIdx} 
+                      className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${
+                        isHighProb ? "bg-emerald-500/5 border-emerald-500/30 ring-1 ring-emerald-500/20" :
+                        isCrit ? "bg-red-500/5 border-red-500/30" :
+                        "bg-secondary/20 border-border/40"
+                      }`}
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className={`text-2xl font-black font-mono ${
+                            isHighProb ? "text-emerald-400" : isCrit ? "text-red-400" : "text-blue-400"
+                          }`}>
+                            {sc.probability}%
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant="outline" className={`text-[9px] font-mono uppercase px-1.5 py-0.5 ${
+                              isCrit ? "border-red-500/40 text-red-400 bg-red-500/10" :
+                              "border-primary/40 text-primary bg-primary/10"
+                            }`}>
+                              {sc.impact}
+                            </Badge>
+                            <span className="text-[10px] font-mono text-muted-foreground flex items-center gap-0.5">
+                              <Clock className="w-2.5 h-2.5" />
+                              {sc.timeline}
+                            </span>
+                          </div>
+                        </div>
+
+                        <h5 className="text-xs font-bold text-foreground leading-tight">
+                          {sc.name}
+                        </h5>
+
+                        <p className="text-[11px] text-muted-foreground leading-relaxed">
+                          {sc.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-2 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+                        <span>CONFIDENCE WEIGHT:</span>
+                        <span className="font-semibold text-foreground">{sc.probability >= 50 ? "PRIMARY TRAJECTORY" : "TAIL RISK"}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Timeline Horizons Progression */}
+              <div className="p-4 rounded-xl border border-border/50 bg-secondary/15 space-y-3">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-foreground font-semibold flex items-center gap-2">
+                    <Compass className="w-3.5 h-3.5 text-primary" />
+                    Strategic Impact Timeline Horizons
+                  </span>
+                  <span className="text-muted-foreground text-[10px]">T+0 TO T+180 DAYS</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3 rounded-lg bg-card/60 border border-border/40 space-y-1">
+                    <div className="text-[10px] font-mono font-bold text-primary flex items-center gap-1">
+                      <Activity className="w-3 h-3" /> T+30 DAYS: IMMEDIATE SHOCK
+                    </div>
+                    <p className="text-muted-foreground text-[11px] leading-snug">
+                      {briefing?.timeline_horizons?.horizon_30d || 
+                        "Immediate supplier audits, emergency inventory rebalancing, and engagement with legal counsel on statutory exposure."}
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-card/60 border border-border/40 space-y-1">
+                    <div className="text-[10px] font-mono font-bold text-amber-400 flex items-center gap-1">
+                      <Activity className="w-3 h-3" /> T+90 DAYS: REALIGNMENT
+                    </div>
+                    <p className="text-muted-foreground text-[11px] leading-snug">
+                      {briefing?.timeline_horizons?.horizon_90d || 
+                        "Secondary procurement contracts operationalized; financial hedges adjusted against spot volatility and margin contraction."}
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-card/60 border border-border/40 space-y-1">
+                    <div className="text-[10px] font-mono font-bold text-emerald-400 flex items-center gap-1">
+                      <Activity className="w-3 h-3" /> T+180 DAYS: EQUILIBRIUM
+                    </div>
+                    <p className="text-muted-foreground text-[11px] leading-snug">
+                      {briefing?.timeline_horizons?.horizon_180d || 
+                        "Structural realignment achieved; capex diverted toward sovereign-resilient and dual-sourced logistics architectures."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Strategic Directives & Recommendations */}
+              {(briefing?.recommendations || []).length > 0 && (
+                <div className="space-y-2 pt-1">
+                  <span className="text-xs font-mono font-semibold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    Actionable Strategic Countermeasures
+                  </span>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                    {(briefing?.recommendations || [
+                      "Initiate multi-tier supply chain audits to identify unhedged single-point-of-failure component dependencies.",
+                      "Establish contingency buffers for critical materials and pre-qualify secondary regional suppliers.",
+                      "Implement continuous geopolitical monitoring to trigger automatic inventory surge protocols upon policy escalation."
+                    ]).map((rec, rIdx) => (
+                      <div key={rIdx} className="p-2.5 rounded-lg bg-secondary/30 border border-border/30 text-foreground/85 text-[11px] flex items-start gap-2">
+                        <span className="font-mono font-bold text-primary shrink-0">0{rIdx + 1}.</span>
+                        <span>{rec}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </CardContent>

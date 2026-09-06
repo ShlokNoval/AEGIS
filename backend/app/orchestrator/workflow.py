@@ -1,6 +1,6 @@
 import asyncio
-import operator
-from typing import TypedDict, List, Dict, Any, Annotated
+import logging
+from typing import TypedDict, List, Dict, Any
 from langgraph.graph import StateGraph, END
 
 from app.shared.schemas import AgentRequest, Claim, AgentResponse
@@ -13,6 +13,8 @@ from app.agents.devil_advocate import DevilsAdvocateAgent
 from app.agents.synthesis import SynthesisAgent
 from app.confidence.engine import ConfidenceEngine
 
+logger = logging.getLogger(__name__)
+
 class OrchestratorState(TypedDict):
     request: AgentRequest
     all_claims: List[Claim]
@@ -24,23 +26,49 @@ class OrchestratorState(TypedDict):
 
 async def dispatch_agents(state: OrchestratorState):
     req = state["request"]
+    round_count = state.get("round_count", 0)
+    challenges = state.get("challenges", [])
     
-    # Run agents in parallel
-    agents = [ReconAgent(), FinancialAgent(), GeopoliticalAgent()]
-    tasks = [agent.run(req) for agent in agents]
-    responses = await asyncio.gather(*tasks)
+    agent_map = {
+        "recon_agent": ReconAgent(),
+        "financial_agent": FinancialAgent(),
+        "geopolitical_agent": GeopoliticalAgent()
+    }
     
-    all_claims = state.get("all_claims", [])
-    agent_resp_dict = state.get("agent_responses", {})
-    
-    for r in responses:
-        agent_resp_dict[r.agent_id] = r
-        all_claims.extend(r.claims)
+    if round_count == 0 or not challenges:
+        # Initial parallel dispatch across all specialist operatives
+        logger.info(f"LangGraph: Initial parallel dispatch for query: '{req.query}'")
+        tasks = [agent.run(req) for agent in agent_map.values()]
+        responses = await asyncio.gather(*tasks)
         
+        all_claims = []
+        agent_resp_dict = {}
+        for r in responses:
+            agent_resp_dict[r.agent_id] = r
+            all_claims.extend(r.claims)
+    else:
+        # Targeted debate re-run: re-examine claims challenged by Devil's Advocate
+        logger.info(f"LangGraph: Re-running challenged agents in debate round {round_count + 1}")
+        all_claims = state.get("all_claims", [])
+        agent_resp_dict = state.get("agent_responses", {})
+        challenged_agent_ids = set(c.get("agent_id") for c in challenges)
+        
+        for agent_id in challenged_agent_ids:
+            if agent_id in agent_map:
+                agent = agent_map[agent_id]
+                agent_challenges = [c for c in challenges if c.get("agent_id") == agent_id]
+                revised_resp = await agent.challenge_review(req, agent_challenges)
+                agent_resp_dict[agent_id] = revised_resp
+                
+                for rev_claim in revised_resp.claims:
+                    for idx, existing in enumerate(all_claims):
+                        if existing.id == rev_claim.id:
+                            all_claims[idx] = rev_claim
+                            
     return {
         "all_claims": all_claims, 
         "agent_responses": agent_resp_dict,
-        "round_count": state.get("round_count", 0) + 1
+        "round_count": round_count + 1
     }
     
 async def devils_advocate_review(state: OrchestratorState):
@@ -50,6 +78,7 @@ async def devils_advocate_review(state: OrchestratorState):
     challenges = da_response.get("challenges", [])
     updated_claims = da_response.get("updated_claims", state.get("all_claims", []))
     
+    logger.info(f"LangGraph: Devil's Advocate produced {len(challenges)} challenge(s)")
     return {
         "challenges": challenges,
         "all_claims": updated_claims
@@ -62,6 +91,7 @@ async def synthesis(state: OrchestratorState):
     confidence_engine = ConfidenceEngine()
     metrics = confidence_engine.global_confidence(state.get("all_claims", []))
     
+    logger.info(f"LangGraph: Synthesis completed with global confidence score: {metrics.get('global_score')}")
     return {
         "final_briefing": briefing,
         "confidence_metrics": metrics

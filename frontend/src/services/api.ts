@@ -27,10 +27,27 @@ export interface ConfidenceMetrics {
   challenge_survival_rate?: number;
 }
 
+export interface PredictiveScenario {
+  name: string;
+  probability: number;
+  impact: "LOW" | "MODERATE" | "HIGH" | "CRITICAL" | "SEVERE" | string;
+  description: string;
+  timeline: string;
+}
+
+export interface TimelineHorizons {
+  horizon_30d?: string;
+  horizon_90d?: string;
+  horizon_180d?: string;
+}
+
 export interface BriefingData {
   title?: string;
   executive_summary?: string;
   key_findings?: string[];
+  scenarios?: PredictiveScenario[];
+  timeline_horizons?: TimelineHorizons;
+  recommendations?: string[];
   claims?: Claim[];
   sections?: Array<{ title: string; content: string }>;
 }
@@ -96,6 +113,7 @@ export const api = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ 
+        query,
         agents, 
         max_rounds: options?.max_rounds ?? 2,
         source_tier: options?.source_tier ?? 2
