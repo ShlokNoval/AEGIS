@@ -188,8 +188,64 @@ Finalize all open Aditya-owned deliverables from Milestone 6 (Integration, Polis
 ### Branch Status
 Pushed to `origin/Aditya`. Clean, no merge conflicts.
 
-### Next Steps (for Shlok / next session)
-1. **Demo Corpus:** Create 3-4 realistic intelligence report PDFs/text in `data/documents/`
-2. **Ingest Script:** `backend/scripts/ingest_corpus.py` to push docs through ChromaDB + Neo4j pipeline
-3. **End-to-End Test:** Wire `final_briefing` from the LangGraph state into the WebSocket broadcast so `Results.tsx` shows real data instead of placeholder content
-4. **README.md:** Root-level setup instructions for both team members
+---
+
+## Session 5 — 2026-09-06
+
+### Role: Shlok Noval (Lead AI Architect & Intelligence Systems Engineer)
+
+### Objectives
+1. Review and cleanly merge Aditya's branch (`origin/Aditya`).
+2. Implement Shlok's data deliverables:
+   - Create 4 realistic strategic intelligence dossiers in `data/documents/`.
+   - Implement `backend/scripts/ingest_corpus.py` to automate chunking, ChromaDB vector indexing, and spaCy NER entity extraction for Neo4j.
+3. Backend API enhancements:
+   - Add `GET /api/query/{id}` for complete briefing, claim, and confidence retrieval.
+   - Add `GET /api/graph/subgraph` for Knowledge Graph viewer visualization.
+   - Add `GET /api/config` for system status and swarm parameters.
+   - Wire dynamic briefing and confidence payload broadcast in `run_orchestrator_background`.
+4. Defense-Grade War Room UI Construction (Anti-"AI Slop"):
+   - Tactical War Room Dashboard with preset scenario injectors and swarm parameter dials.
+   - Live multi-agent DAG pipeline progression and filterable telemetry logs.
+   - Executive Briefing Dossier with interactive Evidence Inspector modal and Markdown export.
+   - Interactive visual Knowledge Graph viewer with entity search, type filters, and relational edge inspection.
+   - Swarm configuration and knowledge base telemetry console.
+5. Create root `README.md` and verify all builds and test workflows.
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `data/documents/semiconductor_export_controls_2026.txt` | Strategic dossier on ASML lithography, packaging chokepoints, and NVIDIA H20 |
+| `data/documents/eu_ai_act_compliance_framework.txt` | Regulatory dossier on EU AI Act Annex III high-risk models and turnover penalties |
+| `data/documents/critical_minerals_supply_chain.txt` | Commodity OSINT on Chinese Gallium/Germanium export permits and AESA radar impact |
+| `data/documents/taiwan_strait_maritime_security.txt` | Maritime logistics dossier on Taiwan Strait container diversion and insurance surcharges |
+| `backend/scripts/ingest_corpus.py` | Production GraphRAG ingestion script for ChromaDB vector store and Neo4j |
+| `frontend/src/pages/KnowledgeGraph.tsx` | Interactive visual Knowledge Graph explorer with entity search and inspector |
+| `frontend/src/pages/AgentConfig.tsx` | Operative swarm configuration and knowledge base telemetry console |
+| `README.md` | Comprehensive project guide, architecture overview, and quick-start instructions |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/main.py` | Added `/api/query/{id}`, `/api/graph/subgraph`, `/api/config`, and real-data telemetry persistence |
+| `backend/app/database/supabase_client.py` | Added `get_briefing_by_query_id` function |
+| `backend/app/agents/recon.py` | Added resilient OSINT fallback handling |
+| `frontend/src/services/api.ts` | Added typed client methods for query results, graph subgraphs, and system config |
+| `frontend/src/components/layout/Header.tsx` | Added live threat posture ticker, military UTC clock, and swarm telemetry badges |
+| `frontend/src/components/layout/Sidebar.tsx` | Updated tactical navigation links (`/`, `/graph`, `/history`, `/settings`) |
+| `frontend/src/pages/Dashboard.tsx` | Overhauled with tactical scenario injectors, swarm cards, and mission parameter dials |
+| `frontend/src/pages/QueryExecution.tsx` | Added visual LangGraph DAG progression pipeline and filterable telemetry feed |
+| `frontend/src/pages/Results.tsx` | Added executive dossier briefing, interactive Evidence Inspector modal, and Markdown export |
+| `frontend/src/App.tsx` | Registered `/graph` and `/settings` routes |
+| `frontend/tailwind.config.js` | Configured full shadcn color tokens and animations |
+| `.gitignore` | Un-ignored demo documents and ignored binary local SQLite databases |
+
+### Verification & Test Results
+- `python backend/scripts/ingest_corpus.py --test`: Processed 4 dossiers, generated 37 chunks, extracted 164 entities into ChromaDB.
+- `python backend/test_workflow.py`: Ran full multi-agent LangGraph workflow end-to-end (2 debate rounds, 8 claims, 1 challenge, synthesized briefing).
+- `npm run build`: Production bundle built in 1.6s with zero TypeScript/CSS errors.
+
+### Git Status
+All phases committed with humanized commit messages and pushed to `origin/shlok`.
