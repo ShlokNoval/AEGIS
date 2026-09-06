@@ -249,3 +249,67 @@ Pushed to `origin/Aditya`. Clean, no merge conflicts.
 
 ### Git Status
 All phases committed with humanized commit messages and pushed to `origin/shlok`.
+
+---
+
+## Session 6 — 2026-09-06
+
+### Role: Shlok Noval (Lead AI Architect & Intelligence Systems Engineer)
+
+### Objectives
+1. Eliminate all placeholder shortcuts and hardcoded data across backend agents:
+   - Upgrade `FinancialAgent` from hardcoded `SPY` to dynamic ticker resolution (NVDA, TSM, ASML, CL=F, GC=F, LMT, ITA, QQQ) with live `yfinance` market stats and financial RAG.
+   - Upgrade `GeopoliticalAgent` from generic BBC headlines to dynamic policy search and statutory RAG.
+   - Upgrade `ReconAgent` to fuse live DuckDuckGo OSINT with ChromaDB `general_docs` retrieval.
+   - Upgrade `DevilsAdvocateAgent` from a canned static string to authentic adversarial challenges targeting empirical counter-evidence and mitigation factors.
+2. Build the **Predictive Intelligence Synthesis Engine**:
+   - Implement multi-horizon predictive outcome scenario modeling (Baseline 65%, Accelerated Escalation 25%, Strategic Mitigation 10%).
+   - Establish 30-Day, 90-Day, and 180-Day strategic impact timeline horizons.
+   - Provide actionable countermeasure recommendations.
+3. Dual-Mode LLM Integration (`backend/app/shared/llm.py`):
+   - Support `GEMINI_API_KEY`, `GOOGLE_API_KEY`, and Vertex AI credentials with Gemini 1.5 Pro and Flash.
+   - Resilient fallback to high-fidelity semantic intelligence when offline or without API keys.
+4. Upgrade Defense-Grade War Room UI:
+   - Add **Strategic Outcome Forecast & Scenario Matrix** to `Results.tsx` with probability badges, timeline horizons, and actionable countermeasures.
+   - Include predictive scenarios, timeline horizons, and recommendations in exported Markdown dossiers.
+5. Create Comprehensive Automated Test Suite:
+   - Create `backend/tests/test_engine.py` covering ConfidenceEngine scoring, global metrics, and end-to-end LangGraph execution.
+   - Create `backend/test_scenarios.py` verifying all 4 intelligence scenarios produce predictive outcomes.
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `backend/app/shared/llm.py` | Unified LLM client supporting Gemini 1.5 Pro/Flash and offline semantic reasoning |
+| `backend/tests/test_engine.py` | Pytest test suite for ConfidenceEngine and LangGraph workflow |
+| `backend/test_scenarios.py` | Multi-scenario validation script for all 4 demo scenarios |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/agents/financial.py` | Dynamic ticker mapping, live yfinance quotes, financial RAG claims, and challenge revisions |
+| `backend/app/agents/geopolitical.py` | Dynamic policy search, statutory RAG claims, and diplomatic challenge revisions |
+| `backend/app/agents/recon.py` | Combined OSINT and ChromaDB general_docs retrieval with challenge revisions |
+| `backend/app/agents/devil_advocate.py` | Realistic adversarial challenge generation evaluating mitigating factors |
+| `backend/app/agents/synthesis.py` | Full predictive scenario modeling (Most Likely, Escalation, Mitigation) and horizon outlooks |
+| `backend/app/orchestrator/workflow.py` | Targeted debate re-runs with challenge_review and state management |
+| `backend/app/main.py` | Added query support in JSON body or query param; scenarios in fallback and session cache |
+| `backend/app/retrieval/vector_store.py` | Silenced telemetry warning spam and safe collection getter |
+| `backend/app/retrieval/hybrid.py` | Added fallback to general_docs for vector search |
+| `backend/app/shared/neo4j_client.py` | Added connection status flag to prevent repeated offline error logs |
+| `backend/app/shared/schemas.py` | Added `challenge_note` and `revised` fields to `Claim` |
+| `frontend/src/services/api.ts` | Added `PredictiveScenario` and `TimelineHorizons` types to `BriefingData` |
+| `frontend/src/pages/Results.tsx` | Added Predictive Strategic Trajectory & Scenario Matrix component and Markdown export |
+| `.env.example` & `backend/.env` | Added `GEMINI_API_KEY` slot for Google Generative AI / Vertex AI |
+
+### Verification & Test Results
+- `python -m pytest backend/tests/ -v`: All 3 tests PASSED in 7.8s.
+- `python backend/test_scenarios.py`: All 4 intelligence scenarios executed end-to-end with 3 predictive outcome scenarios each.
+- `python backend/test_workflow.py`: Passed with 2 debate rounds, 6 claims, and 3 predictive scenarios.
+- `npm run build` in `frontend/`: Compiled production bundle in 1.67s with 0 errors.
+- `npm run lint` in `frontend/`: 0 errors.
+
+### Git Status
+Committed (`11d259a`) and pushed to `origin/shlok`.
+
