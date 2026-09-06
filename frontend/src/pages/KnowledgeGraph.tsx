@@ -39,8 +39,8 @@ export function KnowledgeGraph() {
       });
   }, []);
 
-  const nodes = graphData?.nodes || [];
-  const links = graphData?.links || [];
+  const nodes = useMemo(() => graphData?.nodes || [], [graphData]);
+  const links = useMemo(() => graphData?.links || [], [graphData]);
 
   const filteredNodes = useMemo(() => {
     return nodes.filter((n) => {
