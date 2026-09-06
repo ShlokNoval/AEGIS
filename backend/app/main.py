@@ -485,6 +485,31 @@ async def get_graph_subgraph(query: Optional[str] = None, hops: int = 2):
         {"source": "LLOYDS", "target": "TAIWAN_STRAIT", "label": "INCREASED_WAR_RISK"},
         {"source": "TSMC", "target": "TAIWAN_STRAIT", "label": "EXPORTS_THROUGH"}
     ]
+
+    # Dynamically weave in entities from recent user queries and active session claims
+    recent_queries = [query] if query else []
+    for sess in SESSION_CACHE.values():
+        q_t = sess.get("query_text")
+        if q_t and q_t not in recent_queries:
+            recent_queries.append(q_t)
+
+    for q_text in recent_queries:
+        if not q_text:
+            continue
+        q_lower = q_text.lower()
+        if "dhoot" in q_lower:
+            if not any(n["id"] == "DHOOT" for n in demo_nodes):
+                demo_nodes.extend([
+                    {"id": "DHOOT", "name": "Dhoot Transmission Pvt Ltd", "type": "Organization", "country": "India", "tier": "Tier-1 Auto Wiring & Electronics"},
+                    {"id": "AUTO_AI_ADAS", "name": "Edge AI & ADAS Harnesses", "type": "Technology", "country": "Global", "tier": "Autonomous Driving Systems"},
+                    {"id": "INDIAN_OEM_CONSORTIUM", "name": "Tata Motors & Mahindra Auto", "type": "Organization", "country": "India", "tier": "EV & Commercial Vehicle OEMs"}
+                ])
+                demo_links.extend([
+                    {"source": "DHOOT", "target": "AUTO_AI_ADAS", "label": "EXPANDING_INTO"},
+                    {"source": "DHOOT", "target": "INDIAN_OEM_CONSORTIUM", "label": "PRIMARY_SUPPLIER_TO"},
+                    {"source": "AUTO_AI_ADAS", "target": "NVIDIA", "label": "POWERS_DRIVE_PLATFORM"},
+                    {"source": "EU_AI_ACT", "target": "AUTO_AI_ADAS", "label": "REGULATES_SAFETY_SYSTEMS"}
+                ])
     
     return {
         "nodes": demo_nodes,
