@@ -26,6 +26,8 @@ docker-compose.override.yml
 # Data (large files)
 data/chroma_db/
 data/neo4j/
+chroma_db/
+backend/chroma_db/
 
 # OS
 .DS_Store
@@ -45,3 +47,4 @@ backend/gcp-key.json
 !README.txt
 !requirements.txt
 !backend/requirements.txt
+!data/documents/*.txt

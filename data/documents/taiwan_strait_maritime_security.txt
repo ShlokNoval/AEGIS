@@ -1,0 +1,24 @@
+# INTELLIGENCE DOSSIER: TAIWAN STRAIT NAVAL EXERCISES & MARITIME TRADE CHOKEPOINT VULNERABILITY
+DOCUMENT ID: DOS-GEO-2026-0774
+CLASSIFICATION: STRATEGIC / MARITIME OSINT
+DATE: 2026-01-29
+SOURCE TIER: TIER 1 (Lloyd's Register of Shipping, U.S. Indo-Pacific Command Telemetry, Baltic and International Maritime Council)
+
+## 1. SITUATION REPORT & GEOPOLITICAL DYNAMICS
+Coordinated live-fire naval and amphibious blockading drills conducted by the Eastern Theater Command in zones encircling Kaohsiung and Keelung ports have increased commercial maritime insurance surcharges. The Taiwan Strait handles approximately 48% of global container ship traffic and over 88% of the world's highest-end semiconductor foundry exports.
+
+## 2. MARITIME LOGISTICS & MACROECONOMIC RAMIFICATIONS
+1. **War-Risk Insurance Premiums:** Lloyd's Joint War Committee designated the broader Taiwan Strait passage as an Enhanced War Risk Area, triggering an 8-fold increase in additional hull premiums (from 0.02% to 0.16% of insured vessel value).
+2. **Container Rerouting Latency:** Major shipping lines (Maersk, MSC, Evergreen, Yang Ming) have instituted diversion routes through the Luzon Strait and around eastern the Philippines, adding 3.5 to 5.2 days sailing time to trans-Pacific routes toward West Coast ports (Long Beach, Oakland).
+3. **Semiconductor Freight Exposure:** Air-cargo logistics at Taoyuan International Airport (TPE) have experienced airspace congestion, threatening just-in-time delivery schedules for wafer substrates shipped to packaging and test facilities in Penang, Malaysia and Hsinchu Science Park.
+
+## 3. KEY ORGANIZATIONS & NATIONAL ACTORS
+- **Eastern Theater Command (PLA)** (Nanjing, China): Conducting joint combat readiness patrols and maritime closure exercises.
+- **Ministry of National Defense (MND)** (Taipei, Taiwan): Tracking median-line airspace incursions and activating civil defense alert tiers.
+- **U.S. 7th Fleet** (Yokosuka, Japan): Conducting bilateral Freedom of Navigation Operations (FONOPs) with the Japan Maritime Self-Defense Force (JMSDF).
+- **Lloyd's Market Association (LMA)** (London, UK): Publishing maritime breach zones and setting global underwriter advisory rates.
+- **Evergreen Marine Corp** (Taoyuan, Taiwan): Main container carrier adjusting bunker fuel allocations and scheduling feeder transit.
+
+## 4. DEVIL'S ADVOCATE REVIEW & HISTORICAL PRECEDENTS
+- *Counter-Claim:* Historical precedents from 1996 and 2022 demonstrate that heightened exercise phases typically subside within 96 to 120 hours without complete quarantine of commercial container lanes.
+- *Synthesis & Confidence Metric:* Consensus score across military intelligence and commodities monitoring stands at 81%. Financial markets have priced in a temporary freight rate bump (+12%), but have not yet factored in prolonged structural disruption.
