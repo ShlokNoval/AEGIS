@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { api, HistoryRecord } from "@/services/api";
+import { api, type HistoryRecord } from "@/services/api";
 
 function StatusBadge({ status }: { status: HistoryRecord["status"] }) {
   if (status === "completed") {

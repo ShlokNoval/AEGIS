@@ -6,6 +6,8 @@ import { Dashboard } from "./pages/Dashboard";
 import { QueryExecution } from "./pages/QueryExecution";
 import { Results } from "./pages/Results";
 import { History } from "./pages/History";
+import { KnowledgeGraph } from "./pages/KnowledgeGraph";
+import { AgentConfig } from "./pages/AgentConfig";
 import { Login } from "./pages/Login";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -48,6 +50,8 @@ function App() {
           <Route path="query/:id" element={<QueryExecution />} />
           <Route path="results/:id" element={<Results />} />
           <Route path="history" element={<History />} />
+          <Route path="graph" element={<KnowledgeGraph />} />
+          <Route path="settings" element={<AgentConfig />} />
         </Route>
       </Routes>
     </BrowserRouter>
