@@ -4,10 +4,12 @@ from datetime import datetime
 from .constants import SourceTier
 
 class SourceCitation(BaseModel):
+    model_config = {"extra": "ignore"}
     id: str
     url: Optional[str] = None
     title: str
     tier: SourceTier
+    trust_score: float = Field(default=0.80, ge=0.0, le=1.0)
     snippet: str
     accessed_at: datetime = Field(default_factory=datetime.utcnow)
 

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import uuid
 import logging
+import unicodedata
 from typing import List, Dict, Any, Optional
 
 # Load environment variables
@@ -59,11 +60,11 @@ async def get_system_config():
     """Returns active model routing and operational parameters"""
     return {
         "models": {
-            "recon": "gemini-1.5-flash",
-            "financial": "gemini-1.5-flash",
-            "geopolitical": "gemini-1.5-flash",
-            "devils_advocate": "gemini-1.5-pro",
-            "synthesis": "gemini-1.5-pro"
+            "recon": "gemini-flash-latest",
+            "financial": "gemini-flash-latest",
+            "geopolitical": "gemini-flash-latest",
+            "devils_advocate": "gemini-pro-latest",
+            "synthesis": "gemini-pro-latest"
         },
         "parameters": {
             "max_debate_rounds": 2,
@@ -97,9 +98,27 @@ async def get_history(limit: int = 20, offset: int = 0):
         ]
     return {"history": records, "limit": limit, "offset": offset}
 
+TIER_STR_TO_INT = {"Tier 1": 1, "Tier 2": 2, "Tier 3": 3}
+
+
+def sanitize_text(text: str) -> str:
+    """Normalize unicode and strip non-printable/replacement chars from scraped web content."""
+    if not text:
+        return text
+    # Normalize unicode (e.g. fancy quotes → plain quotes)
+    text = unicodedata.normalize("NFKC", text)
+    # Remove replacement character U+FFFD and control chars except newline/tab
+    return "".join(
+        ch for ch in text
+        if ch == "\n" or ch == "\t" or (unicodedata.category(ch) not in ("Cc", "Cs") and ch != "\uFFFD")
+    ).strip()
+
+
 def serialize_claim(claim: Any) -> Dict[str, Any]:
     """Helper to convert Claim Pydantic object or dict to standard JSON."""
-    if hasattr(claim, "dict"):
+    if hasattr(claim, "model_dump"):
+        d = claim.model_dump()
+    elif hasattr(claim, "dict"):
         d = claim.dict()
     elif isinstance(claim, dict):
         d = claim
@@ -112,16 +131,38 @@ def serialize_claim(claim: Any) -> Dict[str, Any]:
             "agent_id": getattr(claim, "agent_id", "recon_agent"),
             "challenged": getattr(claim, "challenged", False)
         }
-    
-    # Ensure sources are serializable
+
+    # Sanitize the claim statement
+    if "statement" in d and isinstance(d["statement"], str):
+        d["statement"] = sanitize_text(d["statement"])
+
+    # Ensure sources are serializable and tier is normalized to int
     serialized_sources = []
     for s in d.get("sources", []):
-        if hasattr(s, "dict"):
-            serialized_sources.append(s.dict())
+        if hasattr(s, "model_dump"):
+            src = s.model_dump()
+        elif hasattr(s, "dict"):
+            src = s.dict()
         elif isinstance(s, dict):
-            serialized_sources.append(s)
+            src = dict(s)
         else:
-            serialized_sources.append({"title": str(s), "tier": 1, "trust_score": 0.9})
+            src = {"title": str(s), "tier": 1, "trust_score": 0.9, "snippet": ""}
+
+        # Normalize tier: convert enum strings like "Tier 1" → 1
+        raw_tier = src.get("tier", 2)
+        if isinstance(raw_tier, str):
+            src["tier"] = TIER_STR_TO_INT.get(raw_tier, 2)
+        elif hasattr(raw_tier, "value"):
+            # Enum object
+            src["tier"] = TIER_STR_TO_INT.get(raw_tier.value, 2)
+
+        # Sanitize snippet text
+        if "snippet" in src and isinstance(src["snippet"], str):
+            src["snippet"] = sanitize_text(src["snippet"])
+
+        # Drop Pydantic-internal fields not needed by frontend
+        src.pop("accessed_at", None)
+        serialized_sources.append(src)
     d["sources"] = serialized_sources
     return d
 

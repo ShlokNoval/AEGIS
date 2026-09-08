@@ -2,6 +2,7 @@ import time
 import os
 import json
 import logging
+import unicodedata
 from typing import List, Dict, Any
 from duckduckgo_search import DDGS
 
@@ -21,6 +22,19 @@ class ReconAgent(BaseAgent):
     def __init__(self, agent_id: str = "recon_agent", model_name: str = "gemini-1.5-flash"):
         super().__init__(agent_id, model_name)
         
+    @staticmethod
+    def _sanitize(text: str) -> str:
+        """Normalize and strip non-printable/mojibake characters from scraped web content."""
+        if not text:
+            return text
+        text = unicodedata.normalize("NFKC", text)
+        return "".join(
+            ch for ch in text
+            if ch in ("\n", "\t") or (
+                unicodedata.category(ch) not in ("Cc", "Cs") and ch != "\uFFFD"
+            )
+        ).strip()
+
     def _search_ddg(self, query: str, max_results: int = 5) -> List[Dict[str, str]]:
         """Perform a web search using DuckDuckGo with resilient fallback."""
         results = []
@@ -29,8 +43,8 @@ class ReconAgent(BaseAgent):
                 for r in ddgs.text(query, max_results=max_results):
                     results.append({
                         "href": r.get("href", ""),
-                        "title": r.get("title", "OSINT Web Lead"),
-                        "body": r.get("body", "")
+                        "title": self._sanitize(r.get("title", "OSINT Web Lead")),
+                        "body": self._sanitize(r.get("body", ""))
                     })
         except Exception as e:
             logger.debug(f"Live DDGS search exception: {e}. Employing intelligence telemetry buffer.")

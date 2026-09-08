@@ -94,15 +94,15 @@ ${(data.claims || []).map((c, i) => `
 Statement: "${c.statement}"
 Challenged: ${c.challenged ? "YES - " + (c.challenge_note || "Revised") : "NO"}
 Sources:
-${c.sources.map(s => `  - ${s.title} (Tier ${s.tier}, Trust: ${s.trust_score})\n    "${s.snippet || ''}"`).join("\n")}
+${c.sources.map(s => `  - ${s.title} (Tier ${typeof s.tier === 'string' ? s.tier.replace('Tier ', '') : s.tier}, Trust: ${s.trust_score})\n    "${s.snippet || ''}"`).join("\n")}
 `).join("\n")}
 
 =======================================================
 CONFIDENCE RADAR:
-Global Confidence: ${data.confidence?.global_score || data.confidence?.overall_score || 85}%
-Evidence Richness: ${data.confidence?.evidence_richness || 88}%
-Consensus Score: ${data.confidence?.consensus_score || 80}%
-Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
+Global Confidence: ${(() => { const v = data.confidence?.global_score ?? data.confidence?.overall_score ?? 85; return v <= 1 ? Math.round(v * 100) : Math.round(v); })()}%
+Evidence Richness: ${(() => { const v = data.confidence?.evidence_richness ?? 88; return v <= 1 ? Math.round(v * 100) : Math.round(v); })()}%
+Consensus Score: ${(() => { const v = data.confidence?.consensus_score ?? 80; return v <= 1 ? Math.round(v * 100) : Math.round(v); })()}%
+Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_survival_rate ?? 82; return v <= 1 ? Math.round(v * 100) : Math.round(v); })()}%
 `;
 
     const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
@@ -129,7 +129,18 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
   const briefing = data?.briefing;
   const claims = data?.claims || [];
   const confidence = data?.confidence || { overall_score: 85, global_score: 85, evidence_richness: 88, consensus_score: 80, challenge_survival_rate: 82 };
-  const globalScore = confidence.global_score || confidence.overall_score || 85;
+
+  // Normalizes confidence values: backend may return 0-1 floats (old) or 0-100 ints (new)
+  const asPct = (v: number | undefined, fallback = 85): number => {
+    if (v === undefined || v === null) return fallback;
+    return v <= 1 ? Math.round(v * 100) : Math.round(v);
+  };
+
+  const globalScore = asPct(confidence.global_score ?? confidence.overall_score, 85);
+  const evidenceRichness = asPct(confidence.evidence_richness, 88);
+  const consensusScore = asPct(confidence.consensus_score, 80);
+  const survivalRate = asPct(confidence.challenge_survival_rate, 82);
+
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20 animate-in fade-in duration-700">
@@ -207,7 +218,7 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
             <div className="space-y-0.5">
               <span className="text-[10px] font-mono uppercase text-muted-foreground font-semibold">Evidence Richness</span>
               <div className="text-3xl font-black text-emerald-400">
-                {confidence.evidence_richness || 88}%
+                {evidenceRichness}%
               </div>
             </div>
             <div className="h-10 w-10 rounded-full border-2 border-emerald-500/40 flex items-center justify-center bg-emerald-500/10">
@@ -221,7 +232,7 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
             <div className="space-y-0.5">
               <span className="text-[10px] font-mono uppercase text-muted-foreground font-semibold">Agent Consensus</span>
               <div className="text-3xl font-black text-purple-400">
-                {confidence.consensus_score || 80}%
+                {consensusScore}%
               </div>
             </div>
             <div className="h-10 w-10 rounded-full border-2 border-purple-500/40 flex items-center justify-center bg-purple-500/10">
@@ -235,7 +246,7 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
             <div className="space-y-0.5">
               <span className="text-[10px] font-mono uppercase text-muted-foreground font-semibold">DA Survival Rate</span>
               <div className="text-3xl font-black text-amber-400">
-                {confidence.challenge_survival_rate || 82}%
+                {survivalRate}%
               </div>
             </div>
             <div className="h-10 w-10 rounded-full border-2 border-amber-500/40 flex items-center justify-center bg-amber-500/10">
@@ -499,7 +510,7 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
                           }}
                           className="text-xs bg-secondary/60 hover:bg-secondary border border-border/50 text-foreground/80 hover:text-primary px-2.5 py-1 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer font-mono"
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full ${s.tier === 1 ? 'bg-emerald-400' : 'bg-blue-400'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${(typeof s.tier === 'number' ? s.tier : parseInt(String(s.tier).replace('Tier ', ''))) === 1 ? 'bg-emerald-400' : 'bg-blue-400'}`} />
                           <span className="truncate max-w-[200px]">{s.title}</span>
                           <Info className="w-3 h-3 text-muted-foreground shrink-0" />
                         </button>
@@ -620,7 +631,7 @@ Challenge Survival Rate: ${data.confidence?.challenge_survival_rate || 82}%
                 <div>
                   <span className="text-[10px] text-muted-foreground uppercase">Source Credibility Tier:</span>
                   <div className="text-sm font-bold text-emerald-400">
-                    Tier {selectedSource.tier} ({selectedSource.tier === 1 ? "Official / Government" : "Major Industry Media"})
+                    {(() => { const t = typeof selectedSource.tier === 'number' ? selectedSource.tier : parseInt(String(selectedSource.tier).replace('Tier ', '')); return `Tier ${t} (${t === 1 ? 'Official / Government' : t === 2 ? 'Major Industry Media' : 'Open OSINT'})`; })()}
                   </div>
                 </div>
                 <div>

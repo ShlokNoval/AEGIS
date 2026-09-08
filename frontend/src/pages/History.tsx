@@ -29,8 +29,15 @@ function StatusBadge({ status }: { status: HistoryRecord["status"] }) {
   );
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString("en-IN", {
+function formatDate(val: string | number | undefined): string {
+  if (!val) return "Unknown Date";
+  
+  // Handle both ISO strings and UNIX timestamps
+  const d = new Date(typeof val === 'number' && val < 10000000000 ? val * 1000 : val);
+  
+  if (isNaN(d.getTime())) return "Unknown Date";
+  
+  return d.toLocaleString("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric",

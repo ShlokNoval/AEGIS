@@ -47,7 +47,7 @@ async def generate_text(
 
     try:
         import google.generativeai as genai
-        target_model = "gemini-1.5-pro" if "pro" in model_name.lower() else "gemini-1.5-flash"
+        target_model = "gemini-pro-latest" if "pro" in model_name.lower() else "gemini-flash-latest"
         
         kwargs: Dict[str, Any] = {
             "model_name": target_model,

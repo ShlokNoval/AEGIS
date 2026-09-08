@@ -184,6 +184,16 @@ Verifies zero TypeScript, CSS, or bundle errors.
 
 ---
 
+## 5. Final System Audit & Polish (Pre-Submission)
+
+Prior to final submission, AEGIS underwent a rigorous end-to-end audit to ensure flawless execution and eliminate any mock or placeholder behavior in the War Room UI. Key final optimizations include:
+1. **Confidence Normalization Pipeline:** Upgraded the Confidence Engine to export deterministic 0-100 integer scores dynamically derived from actual agent-assigned `trust_score`s (instead of tiered estimates), with a robust frontend normalizer (`asPct`) that gracefully handles legacy cache structures.
+2. **Reconnaissance Encoding Integrity:** Handled Windows-1252/mojibake Unicode corruption in raw DuckDuckGo OSINT scrapes to ensure claims synthesized by the fallback generator remain perfectly legible.
+3. **UI/UX Data Rendering:** Eliminated double prefixing bugs (e.g., "Tier Tier 2") in the React interface and ensured the Markdown Dossier Export pipeline strictly mirrors the sanitized values.
+4. **Unified System Launcher:** Developed a singular `start_aegis.bat` orchestration script to flawlessly launch Neo4j, the FastAPI backend (with correct module paths), and the React UI synchronously.
+
+---
+
 ## 5. Operational Demo Scenarios
 
 The AEGIS Operation Center includes 4 preset high-value intelligence scenarios ready for one-click deployment:

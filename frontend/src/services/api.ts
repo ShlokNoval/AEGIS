@@ -4,7 +4,7 @@ export interface SourceCitation {
   id?: string;
   title: string;
   url?: string;
-  tier: number;
+  tier: number | string;
   trust_score: number;
   snippet?: string;
 }
