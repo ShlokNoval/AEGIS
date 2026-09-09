@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ShieldAlert } from 'lucide-react'
 import { supabase } from '@/services/supabase'
 import { Button } from '@/components/ui/button'
@@ -137,6 +137,13 @@ export function Login() {
 
             <p className="text-[11px] text-center text-muted-foreground/70 font-mono pt-2">
               Accepts any clearance credentials or single-click Quick Access for examination mode.
+            </p>
+
+            <p className="text-sm text-center text-muted-foreground pt-1">
+              New operative?{' '}
+              <Link to="/signup" className="text-primary hover:underline font-medium">
+                Register an identity
+              </Link>
             </p>
           </form>
         </CardContent>
