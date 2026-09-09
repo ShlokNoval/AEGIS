@@ -313,3 +313,37 @@ All phases committed with humanized commit messages and pushed to `origin/shlok`
 ### Git Status
 Committed (`11d259a`) and pushed to `origin/shlok`.
 
+---
+
+## Session 7 — 2026-09-09
+
+### Role: Aditya (Lead Platform Engineer & Full-Stack Systems Developer)
+
+### Context
+Aditya's branch (`origin/Aditya`) was at Session 4 state. This session:
+1. Synced the local `Aditya` branch to `origin/shlok` HEAD (`9310ec1`) — bringing in all of Shlok's Sessions 5–7 work: War Room UI, KnowledgeGraph, streaming resilience, viva defence auth, predictive scenarios, and dynamic supply-chain graph.
+2. Force-pushed synced Aditya branch to remote (`origin/Aditya`).
+3. Continued Aditya's own feature work on top of the merged codebase.
+
+### Files Created/Modified
+
+| File | Change |
+|------|--------|
+| `frontend/src/App.tsx` | Added `Signup` import + `/signup` route to BrowserRouter |
+| `frontend/src/pages/Login.tsx` | Added `Link` import; added "Register an identity → /signup" link below Quick Access |
+| `frontend/src/pages/Signup.tsx` | New page — operative registration with Supabase `auth.signUp` and offline-local fallback |
+
+### Feature: Full Auth Flow Completion
+- Users can now navigate **Login → Register** and back without dead-ends.
+- `Signup.tsx` uses Supabase `auth.signUp()` with email/password; falls back to `localStorage` session on network error (consistent with Login's offline-clearance pattern).
+- Passwords ≥ 6 chars enforced client-side; confirm-password mismatch caught before API call.
+- On success: redirects to `/` (dashboard). On email-confirm-required: shows confirmation message.
+
+### Git Status
+Committed (`574ec74`) and pushed to `origin/Aditya`.
+
+### Remaining Open Tasks (Next Session)
+- **Docker Compose smoke test** — run `docker-compose up` end-to-end and confirm all services connect.
+- **CI/CD tweak** — confirm `.github/workflows/ci.yml` covers the `Aditya` branch trigger pattern.
+- **README polish** — review README.md for any remaining placeholder content.
+
