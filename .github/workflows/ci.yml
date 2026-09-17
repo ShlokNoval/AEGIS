@@ -2,7 +2,7 @@ name: AEGIS CI
 
 on:
   push:
-    branches: [ main, Shlok, Aditya ]
+    branches: [ main, shlok, Shlok, Aditya, aditya ]
   pull_request:
     branches: [ main ]
 

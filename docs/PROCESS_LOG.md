@@ -143,3 +143,207 @@ Successfully integrated Neo4j and Hybrid GraphRAG logic.
 ## Next Steps (Project Finalization)
 - Full end-to-end testing of the pipeline (Trigger query -> Stream WebSockets -> GraphRAG Analysis -> Devil's Advocate -> Synthesis -> Save to DB).
 - Polish the UI based on real data payloads.
+
+---
+
+## Session 4 — 2026-08-30
+
+### Role: Aditya (Lead Platform Engineer & Full-Stack Systems Developer)
+
+### Objectives
+Finalize all open Aditya-owned deliverables from Milestone 6 (Integration, Polish & Demo):
+- History API endpoint + Supabase wiring
+- Async performance optimization for hybrid retrieval (owned by Aditya on the API call chain)
+- UI component polish (ConfidenceBadge, AgentCard, LoadingSpinner)
+- History page (new feature)
+- Updated routing
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `frontend/src/components/ConfidenceBadge.tsx` | Colour-coded HIGH/MED/LOW confidence badge (green ≥80, yellow ≥55, red <55) |
+| `frontend/src/components/AgentCard.tsx` | Per-agent status card with idle/running/done/error states, inline progress bar, animated icons |
+| `frontend/src/components/LoadingSpinner.tsx` | AEGIS branded dual-ring counter-rotating spinner with pulsing centre dot |
+| `frontend/src/pages/History.tsx` | Full history page: paginated query list, status badges, row-click nav to results, empty/error states |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/database/supabase_client.py` | Added `get_query_history(limit, offset)` — paginated SELECT from `queries` table |
+| `backend/app/main.py` | Added `GET /api/history` endpoint with `limit`/`offset` query params |
+| `backend/app/retrieval/hybrid.py` | **Async refactor**: `get_fused_context` is now `async`, runs ChromaDB and Neo4j via `asyncio.gather` for concurrent I/O (reduces latency vs sequential) |
+| `backend/app/agents/base.py` | Added `await` to `retrieve_context` call to `get_fused_context` |
+| `backend/test_graphrag.py` | Added `await` to `get_fused_context` call in test |
+| `frontend/src/services/api.ts` | Added `fetchHistory()` function and `HistoryRecord` interface |
+| `frontend/src/pages/Results.tsx` | Replaced raw `confidence%` text in `ClaimCard` with `<ConfidenceBadge>` |
+| `frontend/src/pages/QueryExecution.tsx` | Replaced plain module list with `<AgentCard>` components; added `<LoadingSpinner>` for zero-progress and empty-events states |
+| `frontend/src/App.tsx` | Imported `History` page; added `/history` protected route |
+
+### Git Commits
+- `97a339e` — `feat(api): add GET /api/history endpoint and async hybrid retrieval`
+- `3d86d06` — `feat(frontend): add ConfidenceBadge, AgentCard, LoadingSpinner components and History page`
+
+### Branch Status
+Pushed to `origin/Aditya`. Clean, no merge conflicts.
+
+---
+
+## Session 5 — 2026-09-06
+
+### Role: Shlok Noval (Lead AI Architect & Intelligence Systems Engineer)
+
+### Objectives
+1. Review and cleanly merge Aditya's branch (`origin/Aditya`).
+2. Implement Shlok's data deliverables:
+   - Create 4 realistic strategic intelligence dossiers in `data/documents/`.
+   - Implement `backend/scripts/ingest_corpus.py` to automate chunking, ChromaDB vector indexing, and spaCy NER entity extraction for Neo4j.
+3. Backend API enhancements:
+   - Add `GET /api/query/{id}` for complete briefing, claim, and confidence retrieval.
+   - Add `GET /api/graph/subgraph` for Knowledge Graph viewer visualization.
+   - Add `GET /api/config` for system status and swarm parameters.
+   - Wire dynamic briefing and confidence payload broadcast in `run_orchestrator_background`.
+4. Defense-Grade War Room UI Construction (Anti-"AI Slop"):
+   - Tactical War Room Dashboard with preset scenario injectors and swarm parameter dials.
+   - Live multi-agent DAG pipeline progression and filterable telemetry logs.
+   - Executive Briefing Dossier with interactive Evidence Inspector modal and Markdown export.
+   - Interactive visual Knowledge Graph viewer with entity search, type filters, and relational edge inspection.
+   - Swarm configuration and knowledge base telemetry console.
+5. Create root `README.md` and verify all builds and test workflows.
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `data/documents/semiconductor_export_controls_2026.txt` | Strategic dossier on ASML lithography, packaging chokepoints, and NVIDIA H20 |
+| `data/documents/eu_ai_act_compliance_framework.txt` | Regulatory dossier on EU AI Act Annex III high-risk models and turnover penalties |
+| `data/documents/critical_minerals_supply_chain.txt` | Commodity OSINT on Chinese Gallium/Germanium export permits and AESA radar impact |
+| `data/documents/taiwan_strait_maritime_security.txt` | Maritime logistics dossier on Taiwan Strait container diversion and insurance surcharges |
+| `backend/scripts/ingest_corpus.py` | Production GraphRAG ingestion script for ChromaDB vector store and Neo4j |
+| `frontend/src/pages/KnowledgeGraph.tsx` | Interactive visual Knowledge Graph explorer with entity search and inspector |
+| `frontend/src/pages/AgentConfig.tsx` | Operative swarm configuration and knowledge base telemetry console |
+| `README.md` | Comprehensive project guide, architecture overview, and quick-start instructions |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/main.py` | Added `/api/query/{id}`, `/api/graph/subgraph`, `/api/config`, and real-data telemetry persistence |
+| `backend/app/database/supabase_client.py` | Added `get_briefing_by_query_id` function |
+| `backend/app/agents/recon.py` | Added resilient OSINT fallback handling |
+| `frontend/src/services/api.ts` | Added typed client methods for query results, graph subgraphs, and system config |
+| `frontend/src/components/layout/Header.tsx` | Added live threat posture ticker, military UTC clock, and swarm telemetry badges |
+| `frontend/src/components/layout/Sidebar.tsx` | Updated tactical navigation links (`/`, `/graph`, `/history`, `/settings`) |
+| `frontend/src/pages/Dashboard.tsx` | Overhauled with tactical scenario injectors, swarm cards, and mission parameter dials |
+| `frontend/src/pages/QueryExecution.tsx` | Added visual LangGraph DAG progression pipeline and filterable telemetry feed |
+| `frontend/src/pages/Results.tsx` | Added executive dossier briefing, interactive Evidence Inspector modal, and Markdown export |
+| `frontend/src/App.tsx` | Registered `/graph` and `/settings` routes |
+| `frontend/tailwind.config.js` | Configured full shadcn color tokens and animations |
+| `.gitignore` | Un-ignored demo documents and ignored binary local SQLite databases |
+
+### Verification & Test Results
+- `python backend/scripts/ingest_corpus.py --test`: Processed 4 dossiers, generated 37 chunks, extracted 164 entities into ChromaDB.
+- `python backend/test_workflow.py`: Ran full multi-agent LangGraph workflow end-to-end (2 debate rounds, 8 claims, 1 challenge, synthesized briefing).
+- `npm run build`: Production bundle built in 1.6s with zero TypeScript/CSS errors.
+
+### Git Status
+All phases committed with humanized commit messages and pushed to `origin/shlok`.
+
+---
+
+## Session 6 — 2026-09-06
+
+### Role: Shlok Noval (Lead AI Architect & Intelligence Systems Engineer)
+
+### Objectives
+1. Eliminate all placeholder shortcuts and hardcoded data across backend agents:
+   - Upgrade `FinancialAgent` from hardcoded `SPY` to dynamic ticker resolution (NVDA, TSM, ASML, CL=F, GC=F, LMT, ITA, QQQ) with live `yfinance` market stats and financial RAG.
+   - Upgrade `GeopoliticalAgent` from generic BBC headlines to dynamic policy search and statutory RAG.
+   - Upgrade `ReconAgent` to fuse live DuckDuckGo OSINT with ChromaDB `general_docs` retrieval.
+   - Upgrade `DevilsAdvocateAgent` from a canned static string to authentic adversarial challenges targeting empirical counter-evidence and mitigation factors.
+2. Build the **Predictive Intelligence Synthesis Engine**:
+   - Implement multi-horizon predictive outcome scenario modeling (Baseline 65%, Accelerated Escalation 25%, Strategic Mitigation 10%).
+   - Establish 30-Day, 90-Day, and 180-Day strategic impact timeline horizons.
+   - Provide actionable countermeasure recommendations.
+3. Dual-Mode LLM Integration (`backend/app/shared/llm.py`):
+   - Support `GEMINI_API_KEY`, `GOOGLE_API_KEY`, and Vertex AI credentials with Gemini 1.5 Pro and Flash.
+   - Resilient fallback to high-fidelity semantic intelligence when offline or without API keys.
+4. Upgrade Defense-Grade War Room UI:
+   - Add **Strategic Outcome Forecast & Scenario Matrix** to `Results.tsx` with probability badges, timeline horizons, and actionable countermeasures.
+   - Include predictive scenarios, timeline horizons, and recommendations in exported Markdown dossiers.
+5. Create Comprehensive Automated Test Suite:
+   - Create `backend/tests/test_engine.py` covering ConfidenceEngine scoring, global metrics, and end-to-end LangGraph execution.
+   - Create `backend/test_scenarios.py` verifying all 4 intelligence scenarios produce predictive outcomes.
+
+### Files Created
+
+| File | Description |
+|------|-------------|
+| `backend/app/shared/llm.py` | Unified LLM client supporting Gemini 1.5 Pro/Flash and offline semantic reasoning |
+| `backend/tests/test_engine.py` | Pytest test suite for ConfidenceEngine and LangGraph workflow |
+| `backend/test_scenarios.py` | Multi-scenario validation script for all 4 demo scenarios |
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `backend/app/agents/financial.py` | Dynamic ticker mapping, live yfinance quotes, financial RAG claims, and challenge revisions |
+| `backend/app/agents/geopolitical.py` | Dynamic policy search, statutory RAG claims, and diplomatic challenge revisions |
+| `backend/app/agents/recon.py` | Combined OSINT and ChromaDB general_docs retrieval with challenge revisions |
+| `backend/app/agents/devil_advocate.py` | Realistic adversarial challenge generation evaluating mitigating factors |
+| `backend/app/agents/synthesis.py` | Full predictive scenario modeling (Most Likely, Escalation, Mitigation) and horizon outlooks |
+| `backend/app/orchestrator/workflow.py` | Targeted debate re-runs with challenge_review and state management |
+| `backend/app/main.py` | Added query support in JSON body or query param; scenarios in fallback and session cache |
+| `backend/app/retrieval/vector_store.py` | Silenced telemetry warning spam and safe collection getter |
+| `backend/app/retrieval/hybrid.py` | Added fallback to general_docs for vector search |
+| `backend/app/shared/neo4j_client.py` | Added connection status flag to prevent repeated offline error logs |
+| `backend/app/shared/schemas.py` | Added `challenge_note` and `revised` fields to `Claim` |
+| `frontend/src/services/api.ts` | Added `PredictiveScenario` and `TimelineHorizons` types to `BriefingData` |
+| `frontend/src/pages/Results.tsx` | Added Predictive Strategic Trajectory & Scenario Matrix component and Markdown export |
+| `.env.example` & `backend/.env` | Added `GEMINI_API_KEY` slot for Google Generative AI / Vertex AI |
+
+### Verification & Test Results
+- `python -m pytest backend/tests/ -v`: All 3 tests PASSED in 7.8s.
+- `python backend/test_scenarios.py`: All 4 intelligence scenarios executed end-to-end with 3 predictive outcome scenarios each.
+- `python backend/test_workflow.py`: Passed with 2 debate rounds, 6 claims, and 3 predictive scenarios.
+- `npm run build` in `frontend/`: Compiled production bundle in 1.67s with 0 errors.
+- `npm run lint` in `frontend/`: 0 errors.
+
+### Git Status
+Committed (`11d259a`) and pushed to `origin/shlok`.
+
+---
+
+## Session 7 — 2026-09-09
+
+### Role: Aditya (Lead Platform Engineer & Full-Stack Systems Developer)
+
+### Context
+Aditya's branch (`origin/Aditya`) was at Session 4 state. This session:
+1. Synced the local `Aditya` branch to `origin/shlok` HEAD (`9310ec1`) — bringing in all of Shlok's Sessions 5–7 work: War Room UI, KnowledgeGraph, streaming resilience, viva defence auth, predictive scenarios, and dynamic supply-chain graph.
+2. Force-pushed synced Aditya branch to remote (`origin/Aditya`).
+3. Continued Aditya's own feature work on top of the merged codebase.
+
+### Files Created/Modified
+
+| File | Change |
+|------|--------|
+| `frontend/src/App.tsx` | Added `Signup` import + `/signup` route to BrowserRouter |
+| `frontend/src/pages/Login.tsx` | Added `Link` import; added "Register an identity → /signup" link below Quick Access |
+| `frontend/src/pages/Signup.tsx` | New page — operative registration with Supabase `auth.signUp` and offline-local fallback |
+
+### Feature: Full Auth Flow Completion
+- Users can now navigate **Login → Register** and back without dead-ends.
+- `Signup.tsx` uses Supabase `auth.signUp()` with email/password; falls back to `localStorage` session on network error (consistent with Login's offline-clearance pattern).
+- Passwords ≥ 6 chars enforced client-side; confirm-password mismatch caught before API call.
+- On success: redirects to `/` (dashboard). On email-confirm-required: shows confirmation message.
+
+### Git Status
+Committed (`574ec74`) and pushed to `origin/Aditya`.
+
+### Remaining Open Tasks (Next Session)
+- **Docker Compose smoke test** — run `docker-compose up` end-to-end and confirm all services connect.
+- **CI/CD tweak** — confirm `.github/workflows/ci.yml` covers the `Aditya` branch trigger pattern.
+- **README polish** — review README.md for any remaining placeholder content.
+

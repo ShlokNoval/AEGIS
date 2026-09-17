@@ -1,4 +1,4 @@
-import { Activity, ShieldAlert, History, Settings } from "lucide-react";
+import { Activity, ShieldAlert, History, Settings, Network } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -6,9 +6,10 @@ export function Sidebar() {
   const location = useLocation();
 
   const links = [
-    { name: "New Intelligence", href: "/", icon: Activity },
-    { name: "Threat Logs", href: "/logs", icon: History },
-    { name: "Agent Config", href: "/settings", icon: Settings },
+    { name: "Operation Center", href: "/", icon: Activity },
+    { name: "Knowledge Graph", href: "/graph", icon: Network },
+    { name: "Threat Logs", href: "/history", icon: History },
+    { name: "Swarm Config", href: "/settings", icon: Settings },
   ];
 
   return (

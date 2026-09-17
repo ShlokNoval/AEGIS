@@ -434,7 +434,7 @@ When a user submits a query, they see:
 
 | Member | Role | Owns |
 |--------|------|------|
-| **Shlok Noval** | Lead AI Architect | Agents, LangGraph, RAG, GraphRAG, Neo4j, Confidence Engine |
+| **Shlok Noval** | Lead AI Architect | Agents, LangGraph, RAG, GraphRAG, Neo4j, Confidence Engine, Predictive Forecasting |
 | **Aditya** | Lead Platform Engineer | Frontend, FastAPI, Supabase, Auth, WebSocket, Docker, CI/CD |
 | **Both** | Shared | Integration testing, documentation, demo, final report |
 
@@ -442,4 +442,74 @@ When a user submits a query, they see:
 
 ## One-Paragraph Summary (For Presentations)
 
-> AEGIS is a multi-agent AI intelligence system that produces transparent, evidence-grounded strategic briefs. When a user asks a complex strategic question, AEGIS dispatches three specialized AI agents (Recon, Financial, Geopolitical) in parallel to gather intelligence from web search, financial markets, and geopolitical databases. A unique Devil's Advocate agent then challenges every claim, triggering targeted re-investigations when contradictions are found. A Synthesis agent compiles the vetted evidence into a professional brief, while a Confidence Engine quantifies trust using source credibility tiers and adversarial survival rates. Built with Gemini AI (via Google Vertex AI), LangGraph orchestration, hybrid RAG+GraphRAG retrieval (ChromaDB + Neo4j), and a React dashboard with real-time WebSocket streaming, AEGIS demonstrates that AI systems can be made more trustworthy through structured self-critique and evidence transparency — all at zero external cost.
+> AEGIS is an autonomous multi-agent intelligence platform that produces transparent, evidence-grounded strategic briefs with multi-horizon predictive outcome forecasting. When a user submits any strategic query, LangGraph dispatches three specialized AI agents (Recon, Financial, Geopolitical) in parallel to gather live OSINT, real-time market valuations (yfinance), and policy intelligence (GraphRAG). A dedicated Devil's Advocate agent challenges claims by evaluating counter-evidence (stockpiles, recycling, alternative routing, waivers), triggering targeted agent re-runs. A Synthesis Engine compiles the vetted evidence into an analyst-grade dossier featuring 3 probability-weighted scenarios (Baseline 65%, Escalation 25%, Mitigation 10%), a 30/90/180-day timeline horizon, and actionable countermeasures, while a Confidence Engine mathematically quantifies trust using source credibility tiers and adversarial survival rates.
+
+---
+
+## Viva Evaluation Defense & PPT Cheat Sheet
+
+### 1. The Predictive Outcome Forecasting Engine
+
+Unlike traditional chatbots that simply summarize past documents, AEGIS provides **forward-looking strategic foresight**:
+
+1. **Probability-Weighted Multi-Horizon Modeling:**
+   - **Baseline Scenario (~65% Probability):** The most likely operational trajectory over 30–90 days, accounting for institutional absorption, secondary market buffers, and standard regulatory enforcement.
+   - **Escalation / Disruption Scenario (~25% Probability):** The high-impact risk trajectory over 90–180 days, triggered by retaliatory sanctions, critical chokepoint closures, or acute supply crunches.
+   - **Mitigation / De-escalation Scenario (~10% Probability):** The adaptation trajectory over 180+ days, driven by bilateral waivers, international trade corridors, or recycling ramp-ups.
+2. **Temporal Impact Progression (30 / 90 / 180 Days):**
+   - **T+30 Days (Shock):** Immediate inventory audits, emergency buffer allocations, and statutory filings.
+   - **T+90 Days (Realignment):** Contract renegotiations, financial hedging adjustments, and secondary supplier qualification.
+   - **T+180 Days (Equilibrium):** Structural realignment, dual-sourced supply chain architectures, and sovereign capex reallocation.
+
+---
+
+### 2. Top 10 Viva Questions & Expert Answers
+
+#### Q1: What is the fundamental advantage of LangGraph over traditional linear LangChain chains?
+**Answer:** Traditional chains are Directed Acyclic Graphs (DAGs) that only move forward in a single linear pass. Strategic intelligence requires **cycles and stateful conditional re-investigation**. LangGraph implements a cyclic state machine where nodes (agents) mutate a shared, typed state dictionary (`OrchestratorState`). If the Devil's Advocate raises an evidentiary challenge, the conditional router (`should_continue`) routes execution back to the challenged agent for a revision pass, capped at `MAX_DEBATE_ROUNDS=2` to ensure guaranteed mathematical termination.
+
+#### Q2: Why combine Vector RAG (ChromaDB) with GraphRAG (Neo4j)?
+**Answer:** Vector search relies on cosine similarity in semantic embedding space. It excels at finding paragraphs describing concepts (e.g. "what are the DUV restrictions?"), but is blind to multi-hop relational dependencies. GraphRAG extracts named entities (Organizations, Countries, Policies) into a Neo4j property graph. When queried, it traverses 1-to-2 hop relationships (e.g., `ASML -[SUPPLIES_TO]-> TSMC -[FABRICATES_FOR]-> NVIDIA -[DEPENDS_ON]-> HBM3e`). Fusing vector chunks with graph relational paths (`hybrid.py`) gives the LLM both unstructured textual depth and structured dependency topology.
+
+#### Q3: How does the Devil's Advocate prevent circular arguments or infinite debate loops?
+**Answer:** Three controls ensure convergence:
+1. **Bounded State Counter:** The orchestrator enforces `max_rounds=2`.
+2. **Single Challenge per Round:** The DA focuses scrutiny on the highest-impact unchallenged claim.
+3. **Evidentiary Bar:** Challenges must cite counter-evidence (e.g., secondary scrap recycling supplying 30% of gallium, domestic stockpiles, third-party logistics rerouting). The originating agent must integrate this counter-evidence in its revised statement rather than stubbornly repeating its initial claim.
+
+#### Q4: How is the Confidence Engine formula derived and calibrated?
+**Answer:** The formula balances three empirical factors:
+$$\text{Confidence} = \max\left(0.1, \min\left(1.0, \text{Base} + \alpha(\text{Support} - \text{Contradict}) + \beta(\text{Survived})\right)\right)$$
+- $\text{Base}$ is anchored to the source credibility tier (Tier 1 = 0.90, Tier 2 = 0.80, Tier 3 = 0.50).
+- $\alpha = 0.1$ rewards cross-source corroboration and penalizes uncorroborated assertions.
+- $\beta = 0.2$ provides a significant trust boost for surviving adversarial scrutiny or penalizes claims that failed to defend against challenges.
+Global confidence aggregates claim scores weighted by average source credibility.
+
+#### Q5: How does the system handle real-time market and commodity volatility?
+**Answer:** The `FinancialAgent` does not rely on static training data. It uses a dynamic keyword-to-ticker resolver that detects assets mentioned in any query (`NVDA`, `TSM`, `ASML`, `CL=F` for Crude Oil, `GC=F` for Gold, `LMT`/`ITA` for Defense primes, `QQQ`, `SPY`). It queries `yfinance` live to fetch real-time market prices, currency, 24h percentage change, and market capitalization, infusing real numbers directly into its strategic claims.
+
+#### Q6: What happens if Vertex AI or the Gemini API is offline during the viva demo?
+**Answer:** AEGIS is engineered with a **Dual-Mode Resilient Architecture** (`backend/app/shared/llm.py`). When `GEMINI_API_KEY` is present, it uses Gemini 1.5 Pro and Flash. If the key is absent or network drops occur, AEGIS seamlessly falls back to its built-in analytical heuristic engine. It extracts entities via spaCy, queries local ChromaDB vectors, retrieves live market quotes via yfinance, and synthesizes structured multi-scenario briefings with 100% zero downtime.
+
+#### Q7: Why use WebSockets instead of HTTP polling for live agent activity?
+**Answer:** Intelligence gathering takes 10–25 seconds across multiple parallel operatives. HTTP polling introduces latency, server load, and jitter. The FastAPI WebSocket manager (`/ws/{query_id}`) creates a persistent bi-directional channel that streams granular state transitions (`agent_started`, `agent_completed`, `challenge_raised`, `synthesis_started`, `briefing_ready`) as they occur, driving the real-time visual LangGraph pipeline on the React frontend.
+
+#### Q8: How are source tiers structured and verified?
+**Answer:** Sources are strictly partitioned into three credibility tiers:
+- **Tier 1 (Official & Statutory, Trust 0.85–1.0):** Government gazettes, BIS directives, SEC 10-K filings, EU Official Journal, USGS commodity summaries, Lloyd's Market Association tariffs.
+- **Tier 2 (Major Institutional Press, Trust 0.60–0.84):** Reuters, Bloomberg, Nikkei Asia, BBC World, major think tanks.
+- **Tier 3 (Open Web & Commentary, Trust 0.30–0.59):** General blogs, social media posts, unverified forums.
+
+#### Q9: How was the project divided between team members?
+**Answer:**
+- **Shlok Noval (Lead AI Architect):** Multi-agent LangGraph orchestrator, Recon/Financial/Geopolitical agent design, Devil's Advocate adversarial loop, Hybrid GraphRAG (ChromaDB + Neo4j), Confidence Engine mathematical scoring, and Predictive Outcome Modeling.
+- **Aditya (Lead Platform Engineer):** Defense War Room React frontend, WebSocket streaming architecture, FastAPI REST endpoints, Supabase PostgreSQL persistence, Docker containerization, and GitHub Actions CI/CD.
+
+#### Q10: What makes AEGIS superior to a generic enterprise chatbot?
+**Answer:** Generic chatbots produce single-perspective, opaque text without verifiable provenance or self-challenge. AEGIS provides:
+1. Multi-domain parallel intelligence gathering.
+2. Adversarial stress-testing of every conclusion.
+3. Quantifiable, explainable confidence metrics.
+4. An interactive Evidence Citation Inspector linking every statement to its exact source and trust tier.
+5. Actionable predictive outcome scenarios with probability ratings.
+

@@ -1,0 +1,24 @@
+# INTELLIGENCE DOSSIER: CRITICAL MINERAL EXPORT RESTRICTIONS & DEFENSE INDUSTRIAL SUPPLY CHAIN VULNERABILITIES
+DOCUMENT ID: DOS-MIN-2026-1102
+CLASSIFICATION: STRATEGIC / COMMODITY OSINT
+DATE: 2026-02-18
+SOURCE TIER: TIER 1 (Ministry of Commerce PRC, U.S. Geological Survey Mineral Commodity Summaries, NATO Defense Procurement Agency)
+
+## 1. STRATEGIC CONTEXT & POLICY ACTIONS
+Throughout 2025 and early 2026, the Ministry of Commerce of China enacted tightened dual-use export licensing regimes on key critical minerals: Gallium, Germanium, Antimony, and heavy rare earth elements (Dysprosium, Terbium). Exporters must provide end-user documentation certifying civilian end-use, creating severe administrative hold-ups for Western aerospace, radar, and semiconductor manufacturers.
+
+## 2. DEFENSE & COMMERCIAL SUPPLY CHAIN IMPACTS
+1. **Gallium & AESA Radars:** Gallium is indispensable for Gallium Nitride (GaN) high-power semiconductor amplifiers deployed in Active Electronically Scanned Array (AESA) radar systems (e.g., F-35 AN/APG-81, Patriot PAC-3 missile batteries). China currently controls ~98% of global primary low-purity gallium production. Lead times for high-purity (6N/7N) gallium ingot have expanded from 4 weeks to 34 weeks.
+2. **Germanium in Optics & Space Arrays:** Germanium substrate shortages have driven a 55% spot-price surge on European metals exchanges, impacting multi-junction solar cells for defense satellites and infrared optical lenses.
+3. **Antimony in Munitions:** Antimony is used as a hardening agent in lead alloys for ammunition, primers, and flame-retardant military textiles. Global stockpiles held by NATO members have reached a 7-year low.
+
+## 3. CORPORATE & REGIONAL ENTITY MAPPING
+- **Ministry of Commerce (MOFCOM)** (Beijing, China): Authority administering export permits and dual-use classification lists.
+- **Lockheed Martin Corporation** (Bethesda, MD): Defense prime contractor executing supply diversification audits across second-tier avionics suppliers.
+- **Raytheon Technologies (RTX)** (Arlington, VA): Implemented synthetic diamond and Silicon Carbide (SiC) research pilots to reduce GaN dependence.
+- **U.S. Geological Survey (USGS)** (Reston, VA): Published strategic mineral deficit warnings; advocating for accelerated processing grants in Canada and Australia.
+- **Lynas Rare Earths** (Perth, Australia): Primary non-Chinese rare earth refining facility (Mt Weld / Kalgoorlie); expanding heavy rare earth cracking facilities.
+
+## 4. ADVERSARIAL CHALLENGE & ADAPTATION DYNAMICS
+- *Counter-Evidence:* Recycled secondary scrap streams in Japan and South Korea are supplying up to 30% of domestic semiconductor-grade gallium requirements, preventing a catastrophic manufacturing halt.
+- *Confidence Assessment:* High confidence (92%) that aerospace defense delivery schedules will experience 3 to 6 month slippages in late 2026 unless federal emergency stockpile releases are authorized.

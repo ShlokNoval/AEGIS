@@ -1,0 +1,23 @@
+# INTELLIGENCE DOSSIER: EU AI ACT ENFORCEMENT TIMELINES & U.S. HYPERSCALER COMPLIANCE EXPOSURE
+DOCUMENT ID: DOS-REG-2026-0419
+CLASSIFICATION: STRATEGIC / REGULATORY INTELLIGENCE
+DATE: 2026-04-02
+SOURCE TIER: TIER 1 (Official Journal of the European Union, European AI Office Directives, Corporate 10-K Disclosures)
+
+## 1. REGULATORY OVERVIEW & ENFORCEMENT DATES
+Regulation (EU) 2024/1689 (The Artificial Intelligence Act) has entered Phase 3 of its phased implementation. As of early 2026, prohibitions on unacceptable risk systems (biometric categorization, social scoring, emotion recognition in workplaces) are fully operative. The regulatory focus has transitioned to General-Purpose AI (GPAI) model governance and the conformity assessment regime for High-Risk AI systems under Annex III.
+
+## 2. HIGH-RISK CLASSIFICATIONS & COMPLIANCE BURDENS
+1. **Systemic Risk Thresholds for GPAI:** Foundation models trained with cumulative floating-point operations (FLOPs) exceeding 10^25 are designated as presenting "systemic risk." Providers (including OpenAI, Google DeepMind, Anthropic, and Meta) must conduct adversarial red-teaming, model evaluations, cyber-resilience audits, and report severe incidents to the European AI Office.
+2. **Financial Penalty Exposure:** Non-compliance with prohibited AI applications carries fines up to €35 million or 7% of total worldwide annual turnover (whichever is higher). GPAI governance breaches carry penalties of up to €15 million or 3% of turnover.
+3. **Hyperscaler Infrastructure Impact:** Cloud hyperscalers (Microsoft Azure, AWS, Google Cloud) operating European availability zones are requiring sovereign cloud architectures with localized telemetry logging, data provenance watermarking, and copyright compliance reporting.
+
+## 3. KEY CORPORATE & INSTITUTIONAL ENTITIES
+- **European AI Office** (Brussels, Belgium): Central supervisory authority overseeing GPAI code of practice and cross-border enforcement.
+- **Microsoft Corporation / OpenAI Partnership**: Auditing GPT-series API delivery in EMEA; established EU Data Boundary compliance nodes in Dublin and Frankfurt.
+- **Alphabet Inc. / Google Cloud**: Upgraded Vertex AI model registry to automatically tag Annex III high-risk compliance metrics and provide transparency summaries.
+- **French CNIL & German BfDI**: National market surveillance authorities launching coordinated joint investigations into algorithmic credit scoring and automated HR screening tools.
+
+## 4. ADVERSARIAL CHALLENGE & COUNTER-ARGUMENTS
+- *Devil's Advocate Objection:* Preliminary enforcement guidance allows an 18-month grace transition period for legacy foundational models deployed before August 2025, significantly mitigating short-term turnover penalties for major enterprise deployments.
+- *Synthesis:* While grace periods delay direct punitive sanctions, enterprise procurement contracts across Fortune 500 multinationals are preemptively freezing vendor deployments that lack EU CE conformity markings.

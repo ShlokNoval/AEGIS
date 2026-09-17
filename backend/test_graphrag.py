@@ -33,7 +33,7 @@ async def test_graphrag():
     print(f"Query: '{query}'")
     
     try:
-        fused_context = get_fused_context(query, collection_name="test_docs")
+        fused_context = await get_fused_context(query, collection_name="test_docs")
         print("\n--- Fused Context Result ---")
         print(fused_context)
         print("----------------------------")
