@@ -61,10 +61,10 @@ export function QueryExecution() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/50 pb-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 font-mono text-xs">
-              OPERATION: ACTIVE
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-xs font-medium tracking-wide">
+              ANALYSIS: RUNNING
             </Badge>
-            <span className="text-xs font-mono text-muted-foreground">SESSION: {id}</span>
+            <span className="text-xs text-muted-foreground">ID: {id}</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground line-clamp-1">
             "{queryText}"
@@ -72,9 +72,9 @@ export function QueryExecution() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="px-3.5 py-1.5 bg-card border-border/80 text-foreground text-xs font-mono">
+          <Badge variant="outline" className="px-3.5 py-1.5 bg-card border-border/80 text-foreground text-xs font-medium">
             <Radio className="w-3.5 h-3.5 mr-2 text-emerald-400 animate-pulse" />
-            SWARM LIVE
+            MODELS ACTIVE
           </Badge>
           <Button
             variant="ghost"
@@ -82,7 +82,7 @@ export function QueryExecution() {
             onClick={() => navigate(`/results/${id}`, { state: { query: queryText } })}
             className="text-xs text-muted-foreground hover:text-primary gap-1"
           >
-            Skip to Briefing <ArrowRight className="w-3.5 h-3.5" />
+            Skip to Results <ArrowRight className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
@@ -90,10 +90,10 @@ export function QueryExecution() {
       {/* Visual Multi-Agent DAG Progression Bar */}
       <Card className="bg-card/50 backdrop-blur-xl border-border/60 shadow-lg overflow-hidden">
         <CardContent className="p-6 space-y-6">
-          <div className="flex items-center justify-between text-xs font-mono">
+          <div className="flex items-center justify-between text-xs font-medium">
             <span className="text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-primary" />
-              LangGraph Orchestration Pipeline
+              Intelligence Processing Pipeline
             </span>
             <span className="text-primary font-bold text-sm">{progress}% COMPLETE</span>
           </div>
@@ -137,9 +137,9 @@ export function QueryExecution() {
         <div className="lg:col-span-2">
           <Card className="h-[500px] flex flex-col bg-card/40 border-border/60 backdrop-blur-xl shadow-xl">
             <CardHeader className="border-b border-border/50 py-3.5 px-5 flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-mono flex items-center text-foreground uppercase tracking-wider">
+              <CardTitle className="text-sm font-medium flex items-center text-foreground uppercase tracking-wider">
                 <Terminal className="w-4 h-4 mr-2 text-primary" />
-                Real-Time Telemetry Feed
+                Real-Time Processing Log
               </CardTitle>
 
               {/* Event Filter Tabs */}
@@ -207,44 +207,44 @@ export function QueryExecution() {
         {/* Right 1 Col: Operative Swarm Status Sidebar */}
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider font-semibold">
-              Operative Swarm Telemetry
+            <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+              Module Status
             </span>
             <span className="text-[10px] font-mono text-emerald-400">STATUS: ACTIVE</span>
           </div>
 
           <div className="space-y-3">
             <AgentCard
-              name="Reconnaissance Operative"
+              name="Reconnaissance Module"
               description="DuckDuckGo & SEC Edgar OSINT"
               status={progress >= 25 ? "done" : progress > 5 ? "running" : "idle"}
               progress={Math.min(100, progress * 4)}
             />
 
             <AgentCard
-              name="Financial Operative"
+              name="Financial Module"
               description="yfinance & Commodity Volatility"
               status={progress >= 45 ? "done" : progress > 15 ? "running" : "idle"}
               progress={Math.min(100, Math.max(0, (progress - 15) * 3))}
             />
 
             <AgentCard
-              name="Geopolitical Operative"
-              description="GDELT & GraphRAG Sanctions Network"
+              name="Geopolitical Module"
+              description="GDELT & Knowledge Graph Data"
               status={progress >= 60 ? "done" : progress > 25 ? "running" : "idle"}
               progress={Math.min(100, Math.max(0, (progress - 25) * 3))}
             />
 
             <AgentCard
               name="Devil's Advocate"
-              description="Adversarial Counter-Evidence Challenge"
+              description="Counter-Evidence & Validation"
               status={progress >= 85 ? "done" : progress > 50 ? "running" : "idle"}
               progress={Math.min(100, Math.max(0, (progress - 50) * 3))}
             />
 
             <AgentCard
-              name="Synthesis Engine"
-              description="Strategic Briefing Compilation"
+              name="Synthesis Module"
+              description="Executive Summary Compilation"
               status={progress >= 95 ? "done" : progress > 80 ? "running" : "idle"}
               progress={Math.min(100, Math.max(0, (progress - 80) * 5))}
             />
