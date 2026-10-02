@@ -9,6 +9,7 @@ import { History } from "./pages/History";
 import { KnowledgeGraph } from "./pages/KnowledgeGraph";
 import { AgentConfig } from "./pages/AgentConfig";
 import { Login } from "./pages/Login";
+import { Signup } from "./pages/Signup";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<any>(null);
@@ -68,6 +69,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="query/:id" element={<QueryExecution />} />

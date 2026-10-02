@@ -52,6 +52,37 @@ export interface BriefingData {
   sections?: Array<{ title: string; content: string }>;
 }
 
+export interface DebateEntry {
+  round: number;
+  type: "challenge_target" | "challenge_response" | "revision";
+  agent_id?: string;
+  agent_name?: string;
+  target_agent?: string;
+  target_agent_name?: string;
+  target_statement?: string;
+  target_confidence?: number;
+  challenge_text?: string;
+  challenged_agent?: string;
+  challenged_agent_name?: string;
+  statement?: string;
+  confidence?: number;
+}
+
+export interface AgentTraceEvent {
+  type?: string;
+  time?: string;
+  agent_id?: string;
+  agent_name?: string;
+  model?: string;
+  message?: string;
+  statement?: string;
+  confidence?: number;
+  sources?: string[];
+  challenge_text?: string;
+  target_agent_name?: string;
+  target_statement?: string;
+}
+
 export interface QueryResult {
   query_id: string;
   status: "processing" | "completed" | "failed";
@@ -60,6 +91,10 @@ export interface QueryResult {
   confidence: ConfidenceMetrics;
   claims: Claim[];
   challenges?: Array<{ claim_id: string; challenge: string; status?: string }>;
+  debate_transcript?: DebateEntry[];
+  agent_events?: AgentTraceEvent[];
+  analysis_mode?: "gemini" | "heuristic_fallback" | string;
+  llm_configured?: boolean;
   created_at?: string;
 }
 
