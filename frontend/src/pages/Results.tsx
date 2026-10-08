@@ -738,8 +738,6 @@ Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_surviva
                         </div>
                       </div>
 
-                    </div>
-
                     {/* Source citations */}
                     <div className="pt-2 border-t border-border/30 flex flex-wrap items-center gap-2">
                       <span className="text-[10px] font-mono text-muted-foreground uppercase">Backing Evidence:</span>
