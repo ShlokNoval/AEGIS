@@ -27,7 +27,7 @@ class ConnectionManager:
 
     async def broadcast(self, query_id: str, message: dict):
         if query_id in self.active_connections:
-            text_data = json.dumps(message)
+            text_data = json.dumps(message, default=str)
             disconnected = []
             for connection in self.active_connections[query_id]:
                 try:
