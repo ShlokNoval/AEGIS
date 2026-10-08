@@ -758,7 +758,8 @@ Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_surviva
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+              );
+            })}
             </div>
           </div>
         </div>
