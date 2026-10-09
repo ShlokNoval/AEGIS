@@ -36,14 +36,22 @@ async def log_query_complete(query_id: str, status: str):
     except Exception as e:
         logger.error(f"Failed to update query status: {e}")
 
+import json
+from datetime import datetime
+
+def serialize_datetime(obj):
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    raise TypeError(f"Type {type(obj)} is not serializable")
+
 async def log_briefing(query_id: str, briefing: dict, confidence: dict):
     if not supabase_client: return
     try:
+        clean_raw_data = json.loads(json.dumps(briefing, default=serialize_datetime))
         supabase_client.table("briefings").insert({
             "query_id": query_id,
             "content": briefing.get("executive_summary", ""),
-            "confidence_score": confidence.get("overall_score", 0),
-            "raw_data": briefing
+            "raw_data": clean_raw_data
         }).execute()
     except Exception as e:
         logger.error(f"Failed to log briefing: {e}")

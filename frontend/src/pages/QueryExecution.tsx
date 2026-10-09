@@ -14,6 +14,7 @@ import {
   ChevronUp,
   Cpu,
   MessageSquare,
+  Loader2,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAgentStream, type AgentEvent } from "@/hooks/useAgentStream";
@@ -230,7 +231,7 @@ export function QueryExecution() {
   useEffect(() => {
     if (isComplete || progress >= 100) {
       const timer = setTimeout(() => {
-        navigate(`/results/${id}`, { state: { query: queryText } });
+        navigate(`/app/results/${id}`, { state: { query: queryText } });
       }, 1200);
       return () => clearTimeout(timer);
     }
@@ -289,7 +290,7 @@ export function QueryExecution() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate(`/results/${id}`, { state: { query: queryText } })}
+            onClick={() => navigate(`/app/results/${id}`, { state: { query: queryText } })}
             className="text-xs text-muted-foreground hover:text-primary gap-1"
           >
             Skip to Results <ArrowRight className="w-3.5 h-3.5" />
@@ -305,10 +306,18 @@ export function QueryExecution() {
               <Layers className="w-4 h-4 text-primary" />
               Intelligence Processing Pipeline
             </span>
-            <span className="text-primary font-bold text-sm">{progress}% COMPLETE</span>
+            <span className="text-primary font-bold text-sm flex items-center gap-2">
+              {progress < 100 && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
+              {progress}% COMPLETE
+            </span>
           </div>
 
-          <Progress value={progress} className="h-2" />
+          <div className="relative">
+            <Progress value={progress} className="h-2" />
+            {progress < 100 && (
+              <div className="absolute top-0 left-0 h-full bg-primary/20 animate-pulse w-full rounded-full pointer-events-none" />
+            )}
+          </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
             {PIPELINE_NODES.map((node, idx) => {

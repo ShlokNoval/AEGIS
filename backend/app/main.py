@@ -476,39 +476,8 @@ async def get_graph_subgraph(query: Optional[str] = None, hops: int = 2):
     except Exception as e:
         logger.warning(f"Live Neo4j query skipped: {e}. Serving intelligence corpus graph.")
 
-    # High-fidelity domain graph from AEGIS Corpus
-    demo_nodes = [
-        {"id": "ASML", "name": "ASML Holding NV", "type": "Organization", "country": "Netherlands", "tier": "Monopoly Lithography"},
-        {"id": "TSMC", "name": "TSMC", "type": "Organization", "country": "Taiwan", "tier": "Advanced Node Foundry"},
-        {"id": "NVIDIA", "name": "NVIDIA Corp", "type": "Organization", "country": "USA", "tier": "AI Accelerators"},
-        {"id": "SMIC", "name": "SMIC", "type": "Organization", "country": "China", "tier": "Domestic Foundry"},
-        {"id": "BIS", "name": "Bureau of Industry & Security", "type": "Government", "country": "USA", "tier": "Regulatory Authority"},
-        {"id": "EU_AI_ACT", "name": "EU AI Act (Regulation 2024/1689)", "type": "Policy", "country": "EU", "tier": "Statutory Mandate"},
-        {"id": "EU_AI_OFFICE", "name": "European AI Office", "type": "Government", "country": "EU", "tier": "Supervisory Body"},
-        {"id": "GALLIUM_RESTRICTION", "name": "Gallium/Germanium Export Controls", "type": "Policy", "country": "China", "tier": "Export Regime"},
-        {"id": "MOFCOM", "name": "Ministry of Commerce (MOFCOM)", "type": "Government", "country": "China", "tier": "Trade Authority"},
-        {"id": "LOCKHEED", "name": "Lockheed Martin", "type": "Organization", "country": "USA", "tier": "Defense Prime (AESA Radars)"},
-        {"id": "TAIWAN_STRAIT", "name": "Taiwan Strait Maritime Corridor", "type": "Chokepoint", "country": "International", "tier": "48% Container Traffic"},
-        {"id": "LLOYDS", "name": "Lloyd's Joint War Committee", "type": "Organization", "country": "UK", "tier": "Underwriters Association"},
-        {"id": "EVERGREEN", "name": "Evergreen Marine", "type": "Organization", "country": "Taiwan", "tier": "Container Logistics"},
-        {"id": "MSFT_OPENAI", "name": "Microsoft / OpenAI Alliance", "type": "Organization", "country": "USA", "tier": "Hyperscaler / Frontier AI"},
-        {"id": "HBM3E", "name": "High Bandwidth Memory (HBM3e)", "type": "Technology", "country": "Global", "tier": "Critical Component"}
-    ]
-
-    demo_links = [
-        {"source": "BIS", "target": "ASML", "label": "REGULATES"},
-        {"source": "ASML", "target": "TSMC", "label": "SUPPLIES_TO"},
-        {"source": "TSMC", "target": "NVIDIA", "label": "FABRICATES_FOR"},
-        {"source": "NVIDIA", "target": "HBM3E", "label": "DEPENDS_ON"},
-        {"source": "BIS", "target": "SMIC", "label": "SANCTIONED_BY"},
-        {"source": "EU_AI_OFFICE", "target": "EU_AI_ACT", "label": "ENFORCES"},
-        {"source": "EU_AI_ACT", "target": "MSFT_OPENAI", "label": "RESTRICTS"},
-        {"source": "MOFCOM", "target": "GALLIUM_RESTRICTION", "label": "ENACTED"},
-        {"source": "GALLIUM_RESTRICTION", "target": "LOCKHEED", "label": "AFFECTED_BY"},
-        {"source": "TAIWAN_STRAIT", "target": "EVERGREEN", "label": "CHOKEPOINT_FOR"},
-        {"source": "LLOYDS", "target": "TAIWAN_STRAIT", "label": "INCREASED_WAR_RISK"},
-        {"source": "TSMC", "target": "TAIWAN_STRAIT", "label": "EXPORTS_THROUGH"}
-    ]
+    demo_nodes = []
+    demo_links = []
 
     # Dynamically weave in entities from recent user queries and active session claims
     recent_queries = [query] if query else []
@@ -526,14 +495,28 @@ async def get_graph_subgraph(query: Optional[str] = None, hops: int = 2):
                 demo_nodes.extend([
                     {"id": "DHOOT", "name": "Dhoot Transmission Pvt Ltd", "type": "Organization", "country": "India", "tier": "Tier-1 Auto Wiring & Electronics"},
                     {"id": "AUTO_AI_ADAS", "name": "Edge AI & ADAS Harnesses", "type": "Technology", "country": "Global", "tier": "Autonomous Driving Systems"},
-                    {"id": "INDIAN_OEM_CONSORTIUM", "name": "Tata Motors & Mahindra Auto", "type": "Organization", "country": "India", "tier": "EV & Commercial Vehicle OEMs"}
+                    {"id": "INDIAN_OEM_CONSORTIUM", "name": "Tata Motors & Mahindra Auto", "type": "Organization", "country": "India", "tier": "EV & Commercial Vehicle OEMs"},
+                    {"id": "RIDE_VISION", "name": "Ride Vision", "type": "Organization", "country": "Israel", "tier": "AI Startup"}
                 ])
                 demo_links.extend([
                     {"source": "DHOOT", "target": "AUTO_AI_ADAS", "label": "EXPANDING_INTO"},
                     {"source": "DHOOT", "target": "INDIAN_OEM_CONSORTIUM", "label": "PRIMARY_SUPPLIER_TO"},
-                    {"source": "AUTO_AI_ADAS", "target": "NVIDIA", "label": "POWERS_DRIVE_PLATFORM"},
-                    {"source": "EU_AI_ACT", "target": "AUTO_AI_ADAS", "label": "REGULATES_SAFETY_SYSTEMS"}
+                    {"source": "RIDE_VISION", "target": "DHOOT", "label": "PARTNERED_WITH"},
+                    {"source": "RIDE_VISION", "target": "AUTO_AI_ADAS", "label": "PROVIDES_TECH_FOR"}
                 ])
+        
+        # Add dynamic node from the query if the graph is empty
+        if not demo_nodes and len(q_text) > 3:
+            extracted_entity = q_text[:25].title() + "..." if len(q_text) > 25 else q_text.title()
+            demo_nodes.extend([
+                {"id": "QUERY_TARGET", "name": extracted_entity, "type": "Target", "country": "Global", "tier": "Investigation Subject"},
+                {"id": "MARKET_RISK", "name": "Market Variables", "type": "Chokepoint", "country": "Global", "tier": "Systemic Risk"},
+                {"id": "SUPPLY_CHAIN", "name": "Logistics & Suppy", "type": "Organization", "country": "Global", "tier": "Upstream Dependency"}
+            ])
+            demo_links.extend([
+                {"source": "MARKET_RISK", "target": "QUERY_TARGET", "label": "IMPACTS"},
+                {"source": "SUPPLY_CHAIN", "target": "QUERY_TARGET", "label": "SUPPLIES"}
+            ])
 
     return {
         "nodes": demo_nodes,

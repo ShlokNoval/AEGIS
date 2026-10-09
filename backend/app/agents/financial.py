@@ -130,6 +130,7 @@ class FinancialAgent(BaseAgent):
 You are the Financial Intelligence Operative for AEGIS.
 Analyze the following strategic query, live market data, and financial intelligence context.
 Generate 2 precise claims evaluating market impact, supply chain valuations, and financial exposure.
+IMPORTANT: Your response MUST be strictly related to the central subject of the query. If the provided sources contain no relevant information about the query's core entities, do NOT hallucinate definitions or unrelated facts. Instead, return an empty JSON array `[]`.
 
 Query: {query}
 
@@ -186,8 +187,8 @@ Return valid JSON with format:
                 
                 # Check for query-specific narrative
                 statement = (
-                    f"{name} ({sym}) trading at {price_display} reflects heightened market sensitivity to sovereign trade actions, "
-                    f"with institutional pricing pricing in potential downstream margin compression and capex reallocations."
+                    f"{name} ({sym}) trading at {price_display} indicates market repricing dynamics connected to the strategic variables "
+                    f"outlined in the query: '{query}'."
                 )
                 
                 source = SourceCitation(

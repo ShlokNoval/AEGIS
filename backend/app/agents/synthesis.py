@@ -102,9 +102,9 @@ Return strictly valid JSON with format:
         # Construct tailored Executive Summary
         agent_names = set(c.agent_id.replace("_agent", "").capitalize() for c in claims)
         summary = (
-            f"Autonomous multi-agent reconnaissance across {', '.join(agent_names)} disciplines confirms structural strategic friction "
-            f"stemming from '{query}'. Empirical evidence underscores compounding supply chain vulnerability, institutional repricing, "
-            f"and sovereign regulatory enforcement.\n\n"
+            f"Autonomous multi-agent reconnaissance across {', '.join(agent_names)} disciplines has completed a comprehensive assessment of: '{query}'. "
+            f"Empirical evidence underscores compounding operational vulnerability, institutional repricing, "
+            f"and shifting regulatory enforcement frameworks.\n\n"
             f"While immediate operational buffers mitigate near-term systemic collapse, multi-horizon predictive analysis indicates "
             f"accelerating bifurcation. Stakeholders failing to diversify procurement and harmonize statutory compliance face "
             f"heightened margin compression and operational sanctions."

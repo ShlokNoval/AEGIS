@@ -1,10 +1,8 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ShieldAlert } from 'lucide-react'
+import { ShieldAlert, Fingerprint, Activity, Terminal } from 'lucide-react'
 import { supabase } from '@/services/supabase'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import aegisLogo from '@/assets/aegis_logo.png'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -18,136 +16,140 @@ export function Login() {
     setLoading(true)
     setError(null)
     
-    // Normalize identifier to an email format if user entered a username like 'neo4j'
-    const loginEmail = email.includes('@') ? email : `${email}@aegis.local`
-
     try {
-      // 1. Attempt Supabase Auth
-      const { data, error: sbError } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password
-      })
-      
-      if (!sbError && data?.session) {
-        navigate('/')
+      const { data, error: sbError } = await supabase.auth.signInWithPassword({ email, password })
+      if (sbError) {
+        if (sbError.message.includes('Failed to fetch')) {
+          localStorage.setItem('aegis_session', JSON.stringify({
+            user: { id: 'demo-local', email, role: 'Strategic Intelligence Operative', clearance: 'LEVEL-4 TOP SECRET' },
+            access_token: 'demo-token'
+          }))
+          navigate('/app')
+          return
+        }
+        setError(sbError.message)
         return
       }
+      if (data?.session) { navigate('/app'); return }
     } catch {
-      // Supabase unavailable or network unreachable — gracefully fallback to local clearance
+      localStorage.setItem('aegis_session', JSON.stringify({
+        user: { id: 'demo-local', email, role: 'Strategic Intelligence Operative', clearance: 'LEVEL-4 TOP SECRET' },
+        access_token: 'demo-token'
+      }))
+      navigate('/app')
+    } finally {
+      setLoading(false)
     }
-
-    // 2. Offline / Tactical Clearance Fallback
-    localStorage.setItem('aegis_session', JSON.stringify({
-      user: {
-        id: 'op-alpha-1',
-        email: loginEmail,
-        role: 'Strategic Intelligence Director',
-        clearance: 'LEVEL-4 TOP SECRET // SCI'
-      },
-      access_token: 'tactical-override-token',
-      created_at: new Date().toISOString()
-    }))
-
-    setLoading(false)
-    navigate('/')
   }
 
-  const handleQuickAccess = () => {
+  const handleQuickDemo = () => {
     localStorage.setItem('aegis_session', JSON.stringify({
-      user: {
-        id: 'op-lead-shlok',
-        email: 'operative@aegis-intel.gov',
-        role: 'Chief Intelligence Architect',
-        clearance: 'DEFCON 1 DIRECTOR CLEARANCE'
-      },
-      access_token: 'tactical-override-token',
-      created_at: new Date().toISOString()
+      user: { id: 'demo', email: 'director@aegis.gov', role: 'Director', clearance: 'LEVEL-5' },
+      access_token: 'demo-token'
     }))
-    navigate('/')
+    navigate('/app')
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4 page-enter">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_hsl(30_100%_94%_/_0.9),transparent_42%)]" />
-      
-      <Card className="surface relative z-10 w-full max-w-md">
-        <CardHeader className="items-center space-y-4 pb-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-            <ShieldAlert className="h-7 w-7" />
+    <div className="aegis-auth-page">
+      <div className="aegis-noise" />
+      <div className="aegis-auth-left">
+        <div className="aegis-auth-left-content">
+          <Link to="/" className="flex items-center gap-3 mb-12">
+            <img src={aegisLogo} alt="AEGIS" className="h-10 w-10 object-contain" />
+            <div className="flex flex-col leading-none">
+              <span className="aegis-brand">AEGIS</span>
+              <span className="aegis-brand-sub">INTELLIGENCE OS</span>
+            </div>
+          </Link>
+          
+          <h2 className="aegis-auth-tagline">Secure Uplink<br /><span className="aegis-gold-text">Required.</span></h2>
+          <p className="aegis-auth-tagline-sub">
+            Authenticate to access live intelligence feeds, deploy autonomous agent swarms, and run adversarial claim validation.
+          </p>
+
+          <div className="aegis-auth-features">
+            <div className="aegis-auth-feature-item">
+              <ShieldAlert className="w-5 h-5 text-primary" />
+              <span>End-to-End Encrypted Briefings</span>
+            </div>
+            <div className="aegis-auth-feature-item">
+              <Fingerprint className="w-5 h-5 text-primary" />
+              <span>Biometric Identity Verification</span>
+            </div>
+            <div className="aegis-auth-feature-item">
+              <Activity className="w-5 h-5 text-primary" />
+              <span>Live Threat Log Monitoring</span>
+            </div>
+            <div className="aegis-auth-feature-item">
+              <Terminal className="w-5 h-5 text-primary" />
+              <span>Direct Neo4j Graph Access</span>
+            </div>
           </div>
-          <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold tracking-tight">Welcome to AEGIS</CardTitle>
-            <CardDescription>Authenticate to access the early warning intelligence system.</CardDescription>
+        </div>
+      </div>
+
+      <div className="aegis-auth-right">
+        <div className="aegis-auth-form-wrap">
+          <div className="aegis-auth-form-header">
+            <h1>Agent Login</h1>
+            <p>Enter your credentials to initiate uplink.</p>
           </div>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+
+          <form onSubmit={handleLogin} className="aegis-auth-form" id="login-form">
             {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm text-center">
+              <div className="aegis-auth-error">
                 {error}
               </div>
             )}
-            <div className="space-y-2">
-              <Input
-                type="text"
-                placeholder="Operative Email or ID (e.g. operative@aegis.ai or neo4j)"
+            
+            <div className="aegis-field">
+              <label htmlFor="email">Operative Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="operative@aegis.gov"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-12 bg-background/50 font-mono text-sm"
+                autoComplete="email"
+                className="aegis-input"
               />
             </div>
-            <div className="space-y-2">
-              <Input
+            
+            <div className="aegis-field">
+              <label htmlFor="password">Passcode</label>
+              <input
+                id="password"
                 type="password"
-                placeholder="Clearance Password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-12 bg-background/50 font-mono text-sm"
+                autoComplete="current-password"
+                className="aegis-input"
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full h-12 text-md shadow-lg shadow-primary/20 font-semibold"
-              disabled={loading}
-            >
-              {loading ? 'Authenticating Uplink...' : 'Establish Uplink'}
-            </Button>
-            
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border/60" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground font-mono text-[10px]">
-                  VIVA & DEMO FAST PATH
-                </span>
-              </div>
-            </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleQuickAccess}
-              className="w-full h-11 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all font-mono text-xs tracking-wider gap-2"
-            >
-              ⚡ QUICK ACCESS // LEVEL-4 CLEARANCE
-            </Button>
+            <button type="submit" id="login-submit-btn" disabled={loading} className="aegis-submit-btn">
+              {loading ? 'Authenticating...' : 'Establish Uplink'}
+            </button>
 
-            <p className="text-[11px] text-center text-muted-foreground/70 font-mono pt-2">
-              Accepts any clearance credentials or single-click Quick Access for examination mode.
-            </p>
+            <div className="aegis-divider-line mt-4 mb-2">OR</div>
 
-            <p className="text-sm text-center text-muted-foreground pt-1">
-              New operative?{' '}
-              <Link to="/signup" className="text-primary hover:underline font-medium">
-                Register an identity
+            <button type="button" onClick={handleQuickDemo} className="aegis-quick-btn">
+              <Fingerprint className="w-4 h-4" /> Quick Access (Viva Mode)
+            </button>
+
+            <p className="aegis-auth-switch mt-6">
+              Need operative clearance?{' '}
+              <Link to="/signup" className="aegis-auth-switch-link">
+                Request Access
               </Link>
             </p>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,23 +1,22 @@
-import { Activity, ShieldAlert, History, Settings, Network } from "lucide-react";
+import { Activity, History, Settings, Network } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import aegisLogo from "@/assets/aegis_logo.png";
 
 export function Sidebar() {
   const location = useLocation();
 
   const links = [
-    { name: "Operation Center", href: "/", icon: Activity },
-    { name: "Knowledge Graph", href: "/graph", icon: Network },
-    { name: "Threat Logs", href: "/history", icon: History },
-    { name: "Swarm Config", href: "/settings", icon: Settings },
+    { name: "Operation Center", href: "/app", icon: Activity },
+    { name: "Knowledge Graph", href: "/app/graph", icon: Network },
+    { name: "Threat Logs", href: "/app/history", icon: History },
+    { name: "Swarm Config", href: "/app/settings", icon: Settings },
   ];
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border/70 bg-card/70 backdrop-blur-xl md:flex">
-      <div className="flex h-20 items-center border-b border-border/60 px-6">
-        <div className="mr-3 flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
-          <ShieldAlert className="h-5 w-5" />
-        </div>
+      <div className="flex h-20 items-center border-b border-border/60 px-6 gap-3">
+        <img src={aegisLogo} alt="AEGIS" className="h-9 w-9 object-contain" style={{ borderRadius: '8px', border: '1px solid rgba(201,168,76,0.3)', boxShadow: '0 0 10px rgba(201,168,76,0.15)' }} />
         <div>
           <h1 className="text-lg font-bold tracking-tight">AEGIS</h1>
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Intelligence OS</p>
@@ -27,7 +26,7 @@ export function Sidebar() {
       <nav className="flex-1 space-y-1 p-4">
         {links.map((link) => {
           const Icon = link.icon;
-          const isActive = location.pathname === link.href;
+          const isActive = location.pathname === link.href || location.pathname.startsWith(link.href + '/');
           
           return (
             <Link

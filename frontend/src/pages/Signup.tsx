@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ShieldAlert, UserPlus } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { supabase } from '@/services/supabase'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import aegisLogo from '@/assets/aegis_logo.png'
 
 export function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -17,125 +16,105 @@ export function Signup() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    setMessage(null)
-    setError(null)
-
-    if (password.length < 6) {
-      setError('Clearance password must contain at least 6 characters.')
-      return
-    }
-
-    if (password !== confirmPassword) {
-      setError('Clearance passwords do not match.')
-      return
-    }
-
+    setMessage(null); setError(null)
+    if (password.length < 6) { setError('Password must be at least 6 characters.'); return }
+    if (password !== confirmPassword) { setError('Passwords do not match.'); return }
     setLoading(true)
-
     try {
-      const { data, error: signupError } = await supabase.auth.signUp({
-        email,
-        password,
-      })
-
-      if (signupError) {
+      const { data, error: signupError } = await supabase.auth.signUp({ email, password })
+      if (signupError) { 
+        if (signupError.message.includes('Failed to fetch')) {
+          // Database is paused/offline - use local Viva session
+          localStorage.setItem('aegis_session', JSON.stringify({
+            user: { id: `local-${Date.now()}`, email, role: 'Strategic Intelligence Operative', clearance: 'LEVEL-4 TOP SECRET // SCI' },
+            access_token: 'local-registration-token',
+            created_at: new Date().toISOString(),
+          }))
+          navigate('/app')
+          return
+        }
         setError(signupError.message)
-        return
+        return 
       }
-
-      if (data.session) {
-        navigate('/')
-        return
-      }
-
-      setMessage('Registration complete. Check your email to confirm access, then establish an uplink.')
+      if (data.session) { navigate('/app'); return }
+      setMessage('Account created. Check your email to confirm, then sign in.')
     } catch {
       localStorage.setItem('aegis_session', JSON.stringify({
-        user: {
-          id: `local-${Date.now()}`,
-          email,
-          role: 'Strategic Intelligence Operative',
-          clearance: 'LEVEL-4 TOP SECRET // SCI',
-        },
+        user: { id: `local-${Date.now()}`, email, role: 'Strategic Intelligence Operative', clearance: 'LEVEL-4 TOP SECRET // SCI' },
         access_token: 'local-registration-token',
         created_at: new Date().toISOString(),
       }))
-      navigate('/')
-      return
-    } finally {
-      setLoading(false)
-    }
+      navigate('/app')
+    } finally { setLoading(false) }
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4 page-enter">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_hsl(30_100%_94%_/_0.9),transparent_42%)]" />
-
-      <Card className="surface relative z-10 w-full max-w-md">
-        <CardHeader className="items-center space-y-4 pb-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-            <ShieldAlert className="h-7 w-7" />
-          </div>
-          <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold tracking-tight">Join AEGIS</CardTitle>
-            <CardDescription>Register an operative identity for the early warning intelligence system.</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignup} className="space-y-4">
-            {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm text-center">
-                {error}
+    <div className="aegis-auth-page">
+      <div className="aegis-noise" />
+      <div className="aegis-auth-left">
+        <div className="aegis-auth-left-content">
+          <Link to="/" className="flex items-center gap-3 mb-12">
+            <img src={aegisLogo} alt="AEGIS" className="h-10 w-10 object-contain" />
+            <div className="flex flex-col leading-none">
+              <span className="aegis-brand">AEGIS</span>
+              <span className="aegis-brand-sub">INTELLIGENCE OS</span>
+            </div>
+          </Link>
+          <h2 className="aegis-auth-tagline">Join the<br /><span className="aegis-gold-text">Intelligence Network.</span></h2>
+          <p className="aegis-auth-tagline-sub">
+            Register an operative profile to access the full AEGIS intelligence stack, including
+            autonomous multi-agent briefings and adversarial claim validation.
+          </p>
+          <div className="aegis-auth-features">
+            {["Full access to all 5 specialized AI agents", "Persistent mission history & briefing archive", "Exportable intelligence dossiers in Markdown", "Real-time WebSocket agent monitoring"].map(f => (
+              <div key={f} className="aegis-auth-feature-item">
+                <span className="aegis-auth-feature-dot" /><span>{f}</span>
               </div>
-            )}
-            {message && (
-              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm text-center">
-                {message}
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="aegis-auth-right">
+        <div className="aegis-auth-form-wrap">
+          <div className="aegis-auth-form-header">
+            <h1>Create Account</h1>
+            <p>Register to access the AEGIS intelligence system.</p>
+          </div>
+          <form onSubmit={handleSignup} className="aegis-auth-form" id="signup-form">
+            {error && <div className="aegis-auth-error">{error}</div>}
+            {message && <div className="aegis-auth-success">{message}</div>}
+            <div className="aegis-field">
+              <label htmlFor="signup-email">Email Address</label>
+              <input id="signup-email" type="email" placeholder="you@example.com" value={email}
+                onChange={e => setEmail(e.target.value)} required autoComplete="email" className="aegis-input" />
+            </div>
+            <div className="aegis-field">
+              <label htmlFor="signup-password">Password</label>
+              <div className="aegis-input-wrap">
+                <input id="signup-password" type={showPass ? 'text' : 'password'} placeholder="Min. 6 characters"
+                  value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
+                  autoComplete="new-password" className="aegis-input" />
+                <button type="button" onClick={() => setShowPass(p => !p)} className="aegis-input-eye" tabIndex={-1}>
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            )}
-            <Input
-              type="email"
-              placeholder="Operative Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="h-12 bg-background/50 font-mono text-sm"
-            />
-            <Input
-              type="password"
-              placeholder="Clearance Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="h-12 bg-background/50 font-mono text-sm"
-            />
-            <Input
-              type="password"
-              placeholder="Confirm Clearance Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-              className="h-12 bg-background/50 font-mono text-sm"
-            />
-            <Button
-              type="submit"
-              className="w-full h-12 text-md shadow-lg shadow-primary/20 font-semibold"
-              disabled={loading}
-            >
-              <UserPlus />
-              {loading ? 'Registering Operative...' : 'Create Operative Identity'}
-            </Button>
-            <p className="text-sm text-center text-muted-foreground pt-2">
-              Already registered?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium">
-                Establish uplink
-              </Link>
+            </div>
+            <div className="aegis-field">
+              <label htmlFor="signup-confirm">Confirm Password</label>
+              <input id="signup-confirm" type={showPass ? 'text' : 'password'} placeholder="Repeat password"
+                value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required
+                minLength={6} autoComplete="new-password" className="aegis-input" />
+            </div>
+            <button type="submit" id="signup-submit-btn" disabled={loading} className="aegis-submit-btn">
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+            <p className="aegis-auth-switch">
+              Already have an account?{' '}
+              <Link to="/login" className="aegis-auth-switch-link">Sign in</Link>
             </p>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

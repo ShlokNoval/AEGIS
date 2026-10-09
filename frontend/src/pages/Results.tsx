@@ -251,7 +251,7 @@ function DAuditCard({ challenges, transcript, analysisMode }: {
       </CardHeader>
       <CardContent className="p-4 space-y-4 text-xs">
         <p className="text-muted-foreground leading-relaxed">
-          The DA used <span className="text-purple-400 font-mono">{analysisMode === "gemini" ? "gemini-1.5-pro" : "retrieval-backed heuristic review"}</span> to
+          The DA used <span className="text-purple-600 dark:text-purple-400 font-mono">{analysisMode === "gemini" ? "gemini-1.5-pro" : "retrieval-backed heuristic review"}</span> to
           adversarially challenge agent claims before certifying final synthesis.
         </p>
 
@@ -269,7 +269,7 @@ function DAuditCard({ challenges, transcript, analysisMode }: {
                     {pair.target.target_agent_name}
                   </span>
                 </div>
-                <p className="text-[11px] text-red-200/85 italic leading-snug line-clamp-3">
+                <p className="text-[11px] text-red-900/80 dark:text-red-200/85 italic leading-snug line-clamp-3">
                   "{pair.target.target_statement}"
                 </p>
               </div>
@@ -280,7 +280,7 @@ function DAuditCard({ challenges, transcript, analysisMode }: {
                   <div className="text-[10px] font-mono uppercase text-amber-400 font-bold">
                     💬 DA Counter-Argument
                   </div>
-                  <p className="text-[11px] text-amber-200/90 italic leading-snug">
+                  <p className="text-[11px] text-amber-900/90 dark:text-amber-200/90 italic leading-snug">
                     "{pair.response.challenge_text}"
                   </p>
                 </div>
@@ -292,10 +292,10 @@ function DAuditCard({ challenges, transcript, analysisMode }: {
                   <div className="text-[10px] font-mono uppercase text-emerald-400 font-bold">
                     ✅ Agent Revision
                     {pair.revision.confidence && (
-                      <span className="ml-2 text-blue-400">→ Conf {pair.revision.confidence}%</span>
+                      <span className="ml-2 text-blue-600 dark:text-blue-400">→ Conf {pair.revision.confidence}%</span>
                     )}
                   </div>
-                  <p className="text-[11px] text-emerald-200/90 leading-snug line-clamp-3">
+                  <p className="text-[11px] text-emerald-900/90 dark:text-emerald-200/90 leading-snug line-clamp-3">
                     {pair.revision.statement}
                   </p>
                 </div>
@@ -439,7 +439,7 @@ Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_surviva
           <Button variant="outline" onClick={() => window.location.reload()} className="text-xs">
             Retry
           </Button>
-          <Button variant="ghost" onClick={() => navigate("/")} className="text-xs">
+          <Button variant="ghost" onClick={() => navigate("/app")} className="text-xs">
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Dashboard
           </Button>
         </div>
@@ -508,7 +508,7 @@ Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_surviva
           </Button>
           <Button
             size="sm"
-            onClick={() => navigate("/graph")}
+            onClick={() => navigate("/app/graph")}
             className="text-xs font-mono gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
           >
             <Network className="w-3.5 h-3.5" /> Knowledge Graph
@@ -833,7 +833,7 @@ Challenge Survival Rate: ${(() => { const v = data.confidence?.challenge_surviva
           </Card>
 
           <Button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/app")}
             variant="outline"
             className="w-full text-xs font-mono gap-2 border-border/80"
           >

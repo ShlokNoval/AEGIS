@@ -51,6 +51,7 @@ Target Claim: "{target_claim.statement}"
 Originating Agent: {target_claim.agent_id}
 
 Formulate a concise, high-impact counter-argument (2 sentences max) highlighting empirical mitigating factors.
+IMPORTANT: Your counter-argument must directly address the target claim. If the claim is factually robust and no reasonable counter-evidence exists, do NOT hallucinate unrelated facts. Instead, reply EXACTLY with the text: "Claim certified. No significant adversarial counter-evidence found."
 Return strictly the counter-argument text.
 """
         critique = await generate_text(llm_prompt, model_name=self.model_name, temperature=0.3)
@@ -86,10 +87,7 @@ Return strictly the counter-argument text.
                     "the duration of speculative price spikes."
                 )
             else:
-                challenge_text = (
-                    "Counter-evidentiary analysis suggests institutional hedging, secondary supplier diversification, "
-                    "and bilateral bilateral exemptions moderate the projected systemic dislocation."
-                )
+                challenge_text = "Audited by DA: Claim passes initial heuristic review. Insufficient contextual data to formulate a strong counter-argument."
 
         # Flag and annotate the target claim
         target_claim.challenged = True

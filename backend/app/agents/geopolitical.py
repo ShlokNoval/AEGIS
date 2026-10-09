@@ -65,6 +65,7 @@ class GeopoliticalAgent(BaseAgent):
 You are the Geopolitical Intelligence Operative for AEGIS.
 Analyze the following strategic query, geopolitical leads, and policy intelligence dossiers.
 Generate 2 precise claims evaluating sovereign authority moves, regulatory mandates, sanctions, or international treaty tensions.
+IMPORTANT: Your response MUST be strictly related to the central subject of the query. If the provided sources contain no relevant information about the query's core entities, do NOT hallucinate definitions or unrelated facts. Instead, return an empty JSON array `[]`.
 
 Query: {query}
 

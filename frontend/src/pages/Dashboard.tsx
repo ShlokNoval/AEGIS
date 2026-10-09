@@ -119,13 +119,13 @@ export function Dashboard() {
         max_rounds: maxRounds,
         source_tier: minTier
       });
-      navigate(`/query/${response.query_id}`, { 
+      navigate(`/app/query/${response.query_id}`, { 
         state: { query, agents: activeAgents, maxRounds, minTier } 
       });
     } catch (err) {
       console.warn("Backend submit fallback: generating local session ID", err);
       const mockQueryId = "sess_" + Math.random().toString(36).substring(2, 9);
-      navigate(`/query/${mockQueryId}`, { 
+      navigate(`/app/query/${mockQueryId}`, { 
         state: { query, agents: activeAgents, maxRounds, minTier } 
       });
     } finally {

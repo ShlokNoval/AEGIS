@@ -119,7 +119,7 @@ export function History() {
             <div className="py-20 text-center space-y-3">
               <Search className="w-10 h-10 text-muted-foreground/30 mx-auto" />
               <p className="text-muted-foreground">No queries found. Submit one from the dashboard!</p>
-              <Button variant="outline" size="sm" onClick={() => navigate("/")}>
+              <Button variant="outline" size="sm" onClick={() => navigate("/app")}>
                 Go to Dashboard
               </Button>
             </div>
@@ -132,7 +132,7 @@ export function History() {
                 <li
                   key={rec.id}
                   className="group flex items-center justify-between px-6 py-4 hover:bg-secondary/30 cursor-pointer transition-colors"
-                  onClick={() => rec.status === "completed" && navigate(`/results/${rec.id}`)}
+                  onClick={() => rec.status === "completed" && navigate(`/app/results/${rec.id}`)}
                 >
                   <div className="flex-1 min-w-0 space-y-1">
                     <p className="text-sm font-medium text-foreground truncate">

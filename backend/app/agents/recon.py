@@ -79,6 +79,7 @@ class ReconAgent(BaseAgent):
 You are the Reconnaissance Operative for AEGIS, an AI Intelligence System.
 Analyze the following query, OSINT search results, and internal RAG intelligence context.
 Generate 2-3 precise, factual intelligence claims grounded in the provided sources.
+IMPORTANT: Your response MUST be strictly related to the central subject of the query. If the provided sources contain no relevant information about the query's core entities, do NOT hallucinate definitions or unrelated facts. Instead, return an empty JSON array `[]`.
 
 Query: {query}
 
